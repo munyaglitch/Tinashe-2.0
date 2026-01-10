@@ -612,7 +612,7 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
               </div>
             )}
 
-            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
               {sortedVehicles.length === 0 ? (
                 <div className="col-span-full text-center py-16">
                   <p className="text-xl text-muted-foreground">No cars available</p>
@@ -622,9 +622,9 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
                   <div
                     key={vehicle.id}
                     onClick={() => setSelectedVehicle(vehicle)}
-                    className="group bg-card rounded-2xl border border-border overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 cursor-pointer"
-                  >
-                    <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden bg-muted p-3">
+                className="group bg-card rounded-[32px] border border-border overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 cursor-pointer"
+              >
+                <div className="relative h-80 sm:h-[22rem] md:h-[26rem] overflow-hidden bg-muted p-3">
                       <Image
                         src={vehicle.image || "/placeholder.svg"}
                         alt={vehicle.name}

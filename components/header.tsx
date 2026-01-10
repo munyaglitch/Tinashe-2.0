@@ -73,7 +73,7 @@ export function Header() {
       <div className="container flex h-16 md:h-20 items-center justify-between px-4">
         {/* Logo */}
         <div
-          className="relative h-10 w-32 md:h-14 md:w-40 transition-transform duration-300 hover:scale-105 cursor-pointer"
+          className="relative h-12 w-36 md:h-16 md:w-48 transition duration-300 hover:scale-105 cursor-pointer"
           onClick={() => router.push("/")}
         >
           <Image
