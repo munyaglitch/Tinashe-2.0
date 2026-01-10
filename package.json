@@ -2,13 +2,12 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
-    "scripts": {
-  "postinstall": "convex codegen",
-  "build": "next build",
-  "dev": "next dev",
-  "lint": "eslint .",
-  "start": "next start"
-},
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "eslint .",
+    "start": "next start"
+  },
   "dependencies": {
     "@auth0/auth0-react": "latest",
     "@clerk/clerk-react": "latest",
