@@ -5,6 +5,7 @@ import { Phone, Filter, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { VehicleDetailModal } from "./vehicle-detail-modal"
+import { getApprovedListings } from "@/lib/listings"
 
 const vehicles = [
   {
@@ -328,9 +329,12 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
   const [userListings, setUserListings] = useState<any[]>([])
 
   useEffect(() => {
-    localStorage.removeItem("approvedListings")
-    const approved = JSON.parse(localStorage.getItem("approvedListings") || "[]")
-    setUserListings(approved)
+    const sync = () => {
+      setUserListings(getApprovedListings())
+    }
+    sync()
+    window.addEventListener("approved-listings-update", sync)
+    return () => window.removeEventListener("approved-listings-update", sync)
   }, [])
 
   const allVehicles = [

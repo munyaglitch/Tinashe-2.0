@@ -20,11 +20,10 @@ export default function AuthPage() {
   const [error, setError] = useState("")
   const [showResetForm, setShowResetForm] = useState(false)
   const [resetEmail, setResetEmail] = useState("")
-  const [resetCode, setResetCode] = useState("")
-  const [resetNewPassword, setResetNewPassword] = useState("")
-  const [resetStatus, setResetStatus] = useState<"idle" | "pending" | "sent">("idle")
-  const [resetFeedback, setResetFeedback] = useState("")
+  const [resetPassword, setResetPassword] = useState("")
+  const [resetPasswordConfirm, setResetPasswordConfirm] = useState("")
   const [resetError, setResetError] = useState("")
+  const [resetSuccess, setResetSuccess] = useState("")
   const router = useRouter()
 
   const updateStoredUser = (targetEmail: string, newPass: string) => {
@@ -58,73 +57,27 @@ export default function AuthPage() {
     setPassword(newPass)
   }
 
-  const handleRequestCode = async () => {
+  const handleResetPassword = () => {
     setResetError("")
-    setResetFeedback("")
+    setResetSuccess("")
     const targetEmail = resetEmail.trim().toLowerCase()
     if (!targetEmail) {
-      setResetError("Please provide the email you registered with")
+      setResetError("Please enter the email you registered with")
       return
     }
-    setResetStatus("pending")
-    try {
-      const response = await fetch("/api/auth/password-reset/request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: targetEmail }),
-      })
-      const payload = await response.json()
-      if (!response.ok) {
-        setResetError(payload.error || "Unable to send reset code")
-        setResetStatus("idle")
-        return
-      }
-      setResetStatus("sent")
-      setResetEmail(targetEmail)
-      setResetFeedback(`Code sent to ${payload.email}`)
-    } catch (error) {
-      setResetStatus("idle")
-      setResetError("Failed to send reset code")
-    }
-  }
-
-  const handleVerifyCode = async () => {
-    setResetError("")
-    if (!/^\d{6}$/.test(resetCode)) {
-      setResetError("Enter the 6-digit numeric code")
+    if (!resetPassword || !resetPasswordConfirm) {
+      setResetError("Type the new password twice to confirm")
       return
     }
-    if (!resetNewPassword) {
-      setResetError("Enter a new password")
+    if (resetPassword !== resetPasswordConfirm) {
+      setResetError("Passwords do not match")
       return
     }
-
-    setResetStatus("pending")
-    try {
-      const response = await fetch("/api/auth/password-reset/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: resetEmail.trim().toLowerCase(),
-          code: resetCode,
-        }),
-      })
-      const payload = await response.json()
-      if (!response.ok) {
-        setResetError(payload.error || "Invalid code")
-        setResetStatus("sent")
-        return
-      }
-      updateStoredUser(resetEmail, resetNewPassword)
-      setResetFeedback("Code verified. Use the new password to sign in.")
-      setResetStatus("idle")
-      setResetCode("")
-      setResetNewPassword("")
-      setShowResetForm(false)
-    } catch (error) {
-      setResetStatus("sent")
-      setResetError("Verification failed")
-    }
+    updateStoredUser(targetEmail, resetPassword)
+    setResetSuccess("Password updated! Sign in with your new password.")
+    setResetPassword("")
+    setResetPasswordConfirm("")
+    setShowResetForm(false)
   }
 
   useEffect(() => {
@@ -254,7 +207,11 @@ export default function AuthPage() {
             <div className="mt-4 text-center">
               <button
                 type="button"
-                onClick={() => setShowResetForm(!showResetForm)}
+                onClick={() => {
+                  setShowResetForm(!showResetForm)
+                  setResetError("")
+                  setResetSuccess("")
+                }}
                 className="text-sm text-primary hover:underline"
               >
                 {showResetForm ? "Hide password reset" : "Forgot your password?"}
@@ -265,8 +222,18 @@ export default function AuthPage() {
               <div className="mt-6 space-y-4 rounded-2xl border border-border bg-background/70 p-6 shadow-lg">
                 <h3 className="text-lg font-semibold text-foreground">Reset your password</h3>
                 <p className="text-sm text-muted-foreground">
-                  We'll send a 6-digit code to the email below. Use it to set a new password.
+                  Provide your email and retype the new password to confirm.
                 </p>
+                {resetError && (
+                  <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
+                    {resetError}
+                  </div>
+                )}
+                {resetSuccess && (
+                  <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200">
+                    {resetSuccess}
+                  </div>
+                )}
                 <div className="space-y-3">
                   <div>
                     <Label htmlFor="reset-email">Email</Label>
@@ -279,64 +246,39 @@ export default function AuthPage() {
                       className="h-12"
                     />
                   </div>
+                  <div>
+                    <Label htmlFor="reset-password">New password</Label>
+                    <Input
+                      id="reset-password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={resetPassword}
+                      onChange={(e) => setResetPassword(e.target.value)}
+                      minLength={6}
+                      className="h-12"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="reset-confirm-password">Confirm password</Label>
+                    <Input
+                      id="reset-confirm-password"
+                      type="password"
+                      placeholder="Retype new password"
+                      value={resetPasswordConfirm}
+                      onChange={(e) => setResetPasswordConfirm(e.target.value)}
+                      minLength={6}
+                      className="h-12"
+                    />
+                    <p className="mt-1 text-xs text-muted-foreground">Retype password to verify they match</p>
+                  </div>
                   <Button
                     type="button"
-                    variant="outline"
-                    onClick={handleRequestCode}
-                    disabled={resetStatus === "pending"}
+                    onClick={handleResetPassword}
                     className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground"
                   >
-                    {resetStatus === "pending" ? "Sending code..." : "Send reset code"}
+                    Update password
                   </Button>
-
-                  {resetFeedback && (
-                    <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200">
-                      {resetFeedback}
-                    </div>
-                  )}
-                  {resetError && (
-                    <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2 text-sm text-destructive">
-                      {resetError}
-                    </div>
-                  )}
                 </div>
-
-                {resetStatus === "sent" && (
-                  <div className="space-y-3 pt-4 border-t border-border">
-                    <div>
-                      <Label htmlFor="reset-code">Reset code</Label>
-                      <Input
-                        id="reset-code"
-                        type="text"
-                        inputMode="numeric"
-                        value={resetCode}
-                        onChange={(e) => setResetCode(e.target.value.replace(/\D/g, ""))}
-                        maxLength={6}
-                        placeholder="Enter 6-digit code"
-                        className="h-12 tracking-widest text-center text-lg"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="reset-new-password">New password</Label>
-                      <Input
-                        id="reset-new-password"
-                        type="password"
-                        placeholder="••••••••"
-                        value={resetNewPassword}
-                        onChange={(e) => setResetNewPassword(e.target.value)}
-                        minLength={6}
-                        className="h-12"
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={handleVerifyCode}
-                      className="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground"
-                    >
-                      Set new password
-                    </Button>
-                  </div>
-                )}
               </div>
             )}
 

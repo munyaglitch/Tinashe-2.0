@@ -5,12 +5,21 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
+import { getProfileData } from "@/lib/profile"
+
+const APPROVER_EMAILS = [
+  "tinashechikwaiti@gmail.com",
+  "mlscalez.z@gmail.com",
+  "jacobis4realdumb@gmail.com",
+]
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userName, setUserName] = useState("")
+  const [profilePicture, setProfilePicture] = useState("")
+  const [isApprover, setIsApprover] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
@@ -31,7 +40,25 @@ export function Header() {
       setUserName(name)
     }
     checkAuth()
+    }, [pathname])
+
+  useEffect(() => {
+    const email = (localStorage.getItem("userEmail") || "").toLowerCase()
+    setIsApprover(APPROVER_EMAILS.includes(email))
   }, [pathname])
+
+  useEffect(() => {
+    const applyProfile = () => {
+      const profile = getProfileData()
+      setProfilePicture(profile.profilePicture)
+    }
+    if (typeof window !== "undefined") {
+      applyProfile()
+      const handler = () => applyProfile()
+      window.addEventListener("profile-update", handler)
+      return () => window.removeEventListener("profile-update", handler)
+    }
+  }, [])
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated")
@@ -61,6 +88,13 @@ export function Header() {
     { icon: MessageCircle, label: "Messages", path: "/messages" },
     { icon: User, label: "My Profile", path: "/profile" },
   ]
+  if (isApprover) {
+    navItems.push({
+      icon: User,
+      label: "Approvals",
+      path: "/approvals",
+    })
+  }
 
   return (
     <header
@@ -129,8 +163,16 @@ export function Header() {
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 transition-all duration-300 border border-primary/30"
               >
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                  <User className="h-4 w-4 text-white" />
+                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden">
+                  {profilePicture ? (
+                    <img
+                      src={profilePicture}
+                      alt="Profile picture"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <User className="h-4 w-4 text-white" />
+                  )}
                 </div>
                 <span className="hidden md:inline font-semibold text-sm max-w-[120px] truncate">{userName}</span>
               </button>

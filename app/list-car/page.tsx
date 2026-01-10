@@ -11,6 +11,7 @@ import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Upload, X } from "lucide-react"
+import { addPendingListing } from "@/lib/listings"
 
 export default function ListCarPage() {
   const router = useRouter()
@@ -66,8 +67,6 @@ export default function ListCarPage() {
     const userEmail = localStorage.getItem("userEmail") || "unknown@email.com"
     const userName = localStorage.getItem("userName") || "Unknown User"
 
-    const listings = JSON.parse(localStorage.getItem("approvedListings") || "[]")
-
     const newListing = {
       id: `listing-${Date.now()}`,
       images,
@@ -78,11 +77,10 @@ export default function ListCarPage() {
       userName,
     }
 
-    listings.push(newListing)
-    localStorage.setItem("approvedListings", JSON.stringify(listings))
+    addPendingListing(newListing)
 
     alert(
-      `Car listing published successfully!\n\nYour listing is now live on the website and visible to all visitors.\n\nListing ID: ${newListing.id}`,
+      `Listing sent to the approval desk.\n\nAn admin will review and publish once approved.\n\nListing ID: ${newListing.id}`,
     )
 
     setImages([])

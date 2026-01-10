@@ -6,6 +6,7 @@ import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
 import { Button } from "@/components/ui/button"
 import { User, Mail, Lock, Edit, LogOut } from "lucide-react"
+import { getProfileData, saveProfileData } from "@/lib/profile"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -31,12 +32,10 @@ export default function ProfilePage() {
       setIsAuthenticated(isAuth)
       setUserName(localStorage.getItem("userName") || "")
       setUserEmail(localStorage.getItem("userEmail") || "")
-      const storedProfile = JSON.parse(
-        localStorage.getItem("profileData") || "{}",
-      )
-      setProfilePicture(storedProfile.profilePicture || "")
-      setPhoneNumber(storedProfile.phoneNumber || "")
-      setBio(storedProfile.bio || "")
+      const storedProfile = getProfileData()
+      setProfilePicture(storedProfile.profilePicture)
+      setPhoneNumber(storedProfile.phoneNumber)
+      setBio(storedProfile.bio)
     }
     checkAuth()
   }, [router])
@@ -96,10 +95,7 @@ export default function ProfilePage() {
   }
 
   const saveProfile = () => {
-    localStorage.setItem(
-      "profileData",
-      JSON.stringify({ profilePicture, phoneNumber, bio }),
-    )
+    saveProfileData({ profilePicture, phoneNumber, bio })
     setProfileMessage("Profile saved successfully!")
     setTimeout(() => setProfileMessage(""), 3000)
   }
