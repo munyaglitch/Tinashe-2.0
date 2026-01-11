@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { SellYourCar } from "@/components/sell-your-car"
-import { Testimonials } from "@/components/testimonials"
+import { SearchByMake } from "@/components/search-by-make"
 import { VehicleGrid } from "@/components/vehicle-grid"
 import { FooterCTA } from "@/components/footer-cta"
 import { Footer } from "@/components/footer"
@@ -24,7 +24,7 @@ export default function Home() {
       <Header />
       <Hero />
       <SellYourCar />
-      <Testimonials />
+      <SearchByMake onBrandSelect={handleBrandSelect} />
       <VehicleGrid selectedBrand={selectedBrand} />
       <FooterCTA />
       <Footer />
