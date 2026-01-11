@@ -2,14 +2,7 @@
 
 import Image from "next/image"
 
-type Brand = {
-  name: string;
-  logo: string;
-  value: string;
-  large?: boolean;
-};
-
-const carBrands: Brand[] = [
+const carBrands = [
   {
     name: "Mercedes",
     logo: "https://upload.wikimedia.org/wikipedia/commons/9/90/Mercedes-Logo.svg",
@@ -45,7 +38,6 @@ const carBrands: Brand[] = [
     name: "Lexus",
     logo: "/images/images-1-removebg-preview.png",
     value: "lexus",
-    large: true,
   },
   {
     name: "Chevrolet",
@@ -73,38 +65,31 @@ export function SearchByMake({ onBrandSelect }: SearchByMakeProps) {
   return (
     <section className="py-8 md:py-12">
       <div className="container px-4">
-        <div className="bg-card/80 rounded-[20px] p-6 md:p-10 shadow-[0_12px_18px_rgba(0,0,0,0.35)]">
+        <div className="bg-gradient-to-br from-card/50 to-card border border-border rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
           <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Search By Make
           </h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 md:gap-6 max-w-5xl mx-auto">
-            {carBrands.map((brand) => {
-              const expanded = brand.large
-              return (
-                <button
-                  key={brand.value}
-                  onClick={() => onBrandSelect(brand.value)}
-                  className="group flex flex-col items-center gap-3 px-5 py-6 rounded-[20px] bg-card/80 shadow-[0_12px_18px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_24px_rgba(0,0,0,0.45)] transition-all duration-300"
-                >
-                  <div
-                    className={`relative rounded-[14px] bg-transparent shadow-[0_8px_12px_rgba(0,0,0,0.55)] p-2 flex items-center justify-center ${
-                      expanded ? "w-28 h-28 md:w-32 md:h-32" : "w-20 h-20 md:w-24 md:h-24"
-                    }`}
-                  >
-                    <Image
-                      src={brand.logo || "/placeholder.svg"}
-                      alt={`${brand.name} logo`}
-                      fill
-                      className={`object-contain ${brand.large ? "scale-[1.1]" : ""}`}
-                    />
-                  </div>
-                  <span className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {brand.name}
-                  </span>
-                </button>
-              )
-            })}
+          <div className="grid grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+            {carBrands.map((brand) => (
+              <button
+                key={brand.value}
+                onClick={() => onBrandSelect(brand.value)}
+                className="group flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 rounded-xl bg-card border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20"
+              >
+                <div className="relative w-12 h-12 md:w-16 md:h-16 group-hover:scale-110 transition-transform duration-300">
+                  <Image
+                    src={brand.logo || "/placeholder.svg"}
+                    alt={`${brand.name} logo`}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+                <span className="text-sm md:text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {brand.name}
+                </span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

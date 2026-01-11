@@ -8,30 +8,15 @@ export const createUser = mutationGeneric({
     email: v.string(),
     name: v.optional(v.string()),
     plan: v.optional(v.string()),
-    profilePicture: v.optional(v.string()),
-    phoneNumber: v.optional(v.string()),
-    bio: v.optional(v.union(v.string(), v.null())),
     stripeCustomerId: v.optional(v.string()),
   },
-  handler: async (
-    { db },
-    { email, name, plan, profilePicture, phoneNumber, bio, stripeCustomerId },
-  ) => {
+  handler: async ({ db }, { email, name, plan, stripeCustomerId }) => {
     const normalizedEmail = normalizeEmail(email);
     const existingUser = await db
       .query("users")
       .filter((q) => q.eq(q.field("email"), normalizedEmail))
       .first();
     if (existingUser) {
-      const patchPayload: Record<string, unknown> = { updatedAt: Date.now() };
-      if (profilePicture !== undefined) patchPayload.profilePicture = profilePicture;
-      if (phoneNumber !== undefined) patchPayload.phoneNumber = phoneNumber;
-      if (bio !== undefined) patchPayload.bio = bio;
-      if (stripeCustomerId !== undefined) patchPayload.stripeCustomerId = stripeCustomerId;
-      if (Object.keys(patchPayload).length > 1) {
-        await db.patch("users", existingUser._id, patchPayload);
-        return db.get("users", existingUser._id);
-      }
       return existingUser;
     }
 
@@ -40,9 +25,6 @@ export const createUser = mutationGeneric({
       email: normalizedEmail,
       name,
       plan: plan ?? "free",
-      profilePicture,
-      phoneNumber,
-      bio,
       stripeCustomerId,
       createdAt: now,
       updatedAt: now,
@@ -76,9 +58,6 @@ export const setPlan = mutationGeneric({
   args: {
     userId: v.id("users"),
     plan: v.string(),
-    profilePicture: v.optional(v.string()),
-    phoneNumber: v.optional(v.string()),
-    bio: v.optional(v.union(v.string(), v.null())),
     stripeCustomerId: v.optional(v.string()),
     stripePriceId: v.optional(v.string()),
   },
@@ -95,15 +74,6 @@ export const setPlan = mutationGeneric({
     }
     if (stripePriceId !== undefined) {
       patchPayload.stripePriceId = stripePriceId;
-    }
-    if (profilePicture !== undefined) {
-      patchPayload.profilePicture = profilePicture;
-    }
-    if (phoneNumber !== undefined) {
-      patchPayload.phoneNumber = phoneNumber;
-    }
-    if (bio !== undefined) {
-      patchPayload.bio = bio;
     }
 
     await db.patch("users", userId, patchPayload);
