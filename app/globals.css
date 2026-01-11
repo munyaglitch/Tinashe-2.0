@@ -434,3 +434,19 @@ a {
 .text-glow-accent {
   text-shadow: 0 0 8px var(--color-accent), 0 0 15px var(--color-accent), 0 0 25px var(--color-primary);
 }
+
+.testimonial-track {
+  display: flex;
+  gap: 1.5rem;
+  animation: testimonial-glide 36s linear infinite;
+  will-change: transform;
+}
+
+@keyframes testimonial-glide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

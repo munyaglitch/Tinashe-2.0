@@ -626,14 +626,14 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
                   <div
                     key={vehicle.id}
                     onClick={() => setSelectedVehicle(vehicle)}
-                className="group bg-card rounded-[32px] border border-border overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 cursor-pointer"
-              >
-                <div className="relative h-80 sm:h-[22rem] md:h-[26rem] overflow-hidden bg-muted p-3">
+                    className="group bg-card rounded-[32px] border border-border overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 cursor-pointer"
+                  >
+                    <div className="relative h-[24rem] sm:h-[26rem] md:h-[30rem] overflow-hidden bg-card">
                       <Image
                         src={vehicle.image || "/placeholder.svg"}
                         alt={vehicle.name}
                         fill
-                        className="object-contain group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                       />
                       <div className="absolute top-3 right-3 px-3 py-1 bg-primary/90 backdrop-blur-sm text-white text-xs md:text-sm font-bold rounded-full">
                         {vehicle.year}
