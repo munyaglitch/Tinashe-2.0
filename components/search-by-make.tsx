@@ -61,15 +61,12 @@ interface SearchByMakeProps {
   onBrandSelect: (brand: string) => void
 }
 
-<<<<<<< HEAD
-=======
 const getLogoClass = (brandValue: string) => {
   return brandValue === "lexus"
     ? "w-24 h-24 md:w-32 md:h-32"
     : "w-12 h-12 md:w-16 md:h-16"
 }
 
->>>>>>> d6c87dd (Update site)
 export function SearchByMake({ onBrandSelect }: SearchByMakeProps) {
   return (
     <section className="py-8 md:py-12">
@@ -86,13 +83,10 @@ export function SearchByMake({ onBrandSelect }: SearchByMakeProps) {
                 onClick={() => onBrandSelect(brand.value)}
                 className="group flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 rounded-xl bg-card border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20"
               >
-<<<<<<< HEAD
                 <div className="relative w-12 h-12 md:w-16 md:h-16 group-hover:scale-110 transition-transform duration-300">
-=======
                 <div
                   className={`relative ${getLogoClass(brand.value)} group-hover:scale-110 transition-transform duration-300`}
                 >
->>>>>>> d6c87dd (Update site)
                   <Image
                     src={brand.logo || "/placeholder.svg"}
                     alt={`${brand.name} logo`}
