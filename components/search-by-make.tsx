@@ -38,6 +38,7 @@ const carBrands = [
     name: "Lexus",
     logo: "/images/images-1-removebg-preview.png",
     value: "lexus",
+    isLarger: true,
   },
   {
     name: "Chevrolet",
@@ -77,7 +78,11 @@ export function SearchByMake({ onBrandSelect }: SearchByMakeProps) {
                 onClick={() => onBrandSelect(brand.value)}
                 className="group flex flex-col items-center gap-2 md:gap-3 p-4 md:p-6 rounded-xl bg-card border-2 border-border hover:border-primary hover:bg-primary/5 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20"
               >
-                <div className="relative w-12 h-12 md:w-16 md:h-16 group-hover:scale-110 transition-transform duration-300">
+                <div
+                  className={`relative group-hover:scale-110 transition-transform duration-300 ${
+                    brand.isLarger ? "w-20 h-20 md:w-24 md:h-24" : "w-12 h-12 md:w-16 md:h-16"
+                  }`}
+                >
                   <Image
                     src={brand.logo || "/placeholder.svg"}
                     alt={`${brand.name} logo`}

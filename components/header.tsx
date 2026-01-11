@@ -1,17 +1,13 @@
 "use client"
 
-import { Phone, Menu, X, User, LogOut, Car, PlusCircle, MessageCircle } from "lucide-react"
+import { Phone, Menu, X, User, LogOut, Car, PlusCircle, MessageCircle, CheckSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
 import { getProfileData } from "@/lib/profile"
 
-const APPROVER_EMAILS = [
-  "tinashechikwaiti@gmail.com",
-  "mlscalez.z@gmail.com",
-  "jacobis4realdumb@gmail.com",
-]
+const APPROVER_EMAILS = ["tinashechikwaiti@gmail.com", "mlscalez.z@gmail.com", "jacobis4realdumb@gmail.com"]
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -40,7 +36,7 @@ export function Header() {
       setUserName(name)
     }
     checkAuth()
-    }, [pathname])
+  }, [pathname])
 
   useEffect(() => {
     const email = (localStorage.getItem("userEmail") || "").toLowerCase()
@@ -83,15 +79,15 @@ export function Header() {
   }
 
   const navItems = [
-    { icon: Car, label: "Buy a Car", path: "/" },
-    { icon: PlusCircle, label: "List a Car", path: "/list-car", onClick: handleListCarClick },
+    { icon: Car, label: "Explore Cars", path: "/" },
+    { icon: PlusCircle, label: "List Car", path: "/list-car", onClick: handleListCarClick },
     { icon: MessageCircle, label: "Messages", path: "/messages" },
-    { icon: User, label: "My Profile", path: "/profile" },
+    { icon: User, label: "Profile", path: "/profile" },
   ]
   if (isApprover) {
     navItems.push({
-      icon: User,
-      label: "Approvals",
+      icon: CheckSquare,
+      label: "Approval Panel",
       path: "/approvals",
     })
   }
@@ -166,7 +162,7 @@ export function Header() {
                 <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden">
                   {profilePicture ? (
                     <img
-                      src={profilePicture}
+                      src={profilePicture || "/placeholder.svg"}
                       alt="Profile picture"
                       className="h-full w-full object-cover"
                     />
@@ -228,7 +224,7 @@ export function Header() {
 
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-border bg-card/98 backdrop-blur-xl animate-in slide-in-from-top duration-300">
-          <nav className="container px-4 py-4 flex flex-col gap-4">
+          <nav className="container px-4 py-4 flex flex-col gap-2">
             {navItems.map((item) => {
               const Icon = item.icon
               const isActive = pathname === item.path
@@ -243,32 +239,40 @@ export function Header() {
                       router.push(item.path)
                     }
                   }}
-                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-all duration-300 ${
-                    isActive ? "bg-white/20 text-white" : "text-white/80 hover:text-white hover:bg-white/10"
+                  className={`flex items-center gap-4 px-4 py-3 rounded-lg transition-all duration-300 ${
+                    isActive ? "bg-primary/20 text-white" : "text-white/90 hover:text-white hover:bg-white/10"
                   }`}
                 >
-                  <Icon className="h-5 w-5 md:h-6 md:w-6" />
-                  <span className="text-xs font-medium hidden sm:block">{item.label}</span>
+                  <Icon className="h-6 w-6 flex-shrink-0" />
+                  <span className="text-base font-semibold">{item.label}</span>
                 </button>
               )
             })}
             <a
               href="tel:+263783935399"
-              className="flex items-center gap-2 text-foreground hover:text-primary transition-all duration-300 font-semibold text-lg py-2"
+              className="flex items-center gap-4 px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-lg"
             >
-              <Phone className="h-5 w-5" />
-              <span>+263 78 393 5399</span>
+              <Phone className="h-6 w-6 flex-shrink-0" />
+              <span className="text-base font-semibold">+263 78 393 5399</span>
             </a>
             {isAuthenticated ? (
               <>
                 <div className="border-t border-border pt-4 mt-2">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                      <User className="h-5 w-5 text-white" />
+                  <div className="flex items-center gap-3 mb-3 px-2">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center overflow-hidden flex-shrink-0">
+                      {profilePicture ? (
+                        <img
+                          src={profilePicture || "/placeholder.svg"}
+                          alt="Profile picture"
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <User className="h-5 w-5 text-white" />
+                      )}
                     </div>
-                    <div>
-                      <p className="font-semibold">{userName}</p>
-                      <p className="text-xs text-muted-foreground">{localStorage.getItem("userEmail")}</p>
+                    <div className="min-w-0">
+                      <p className="font-semibold truncate text-white">{userName}</p>
+                      <p className="text-xs text-white/70 truncate">{localStorage.getItem("userEmail")}</p>
                     </div>
                   </div>
                   <button
@@ -276,20 +280,20 @@ export function Header() {
                       handleNavClick()
                       handleListCarClick()
                     }}
-                    className="w-full text-left px-3 py-2 rounded-md hover:bg-primary/10 transition-colors flex items-center gap-2 mb-2"
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-primary/10 transition-colors flex items-center gap-4 text-white/90 hover:text-white"
                   >
-                    <User className="h-4 w-4" />
-                    My Listings
+                    <User className="h-6 w-6 flex-shrink-0" />
+                    <span className="text-base font-semibold">My Listings</span>
                   </button>
                   <button
                     onClick={() => {
                       handleNavClick()
                       handleLogout()
                     }}
-                    className="w-full text-left px-3 py-2 rounded-md hover:bg-destructive/10 text-destructive transition-colors flex items-center gap-2"
+                    className="w-full text-left px-4 py-3 rounded-lg hover:bg-destructive/10 text-destructive transition-colors flex items-center gap-4 mt-1"
                   >
-                    <LogOut className="h-4 w-4" />
-                    Log Out
+                    <LogOut className="h-6 w-6 flex-shrink-0" />
+                    <span className="text-base font-semibold">Log Out</span>
                   </button>
                 </div>
               </>
@@ -299,10 +303,10 @@ export function Header() {
                   handleNavClick()
                   router.push("/auth")
                 }}
-                className="flex items-center gap-2 text-foreground hover:text-primary transition-all duration-300 font-semibold text-lg py-2 border-t border-border pt-4 mt-2"
+                className="flex items-center gap-4 px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-300 rounded-lg border-t border-border mt-2 pt-4"
               >
-                <User className="h-5 w-5" />
-                <span>Sign In</span>
+                <User className="h-6 w-6 flex-shrink-0" />
+                <span className="text-base font-semibold">Sign In</span>
               </button>
             )}
           </nav>
