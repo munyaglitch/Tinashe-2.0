@@ -87,6 +87,20 @@ export default function AuthPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email])
 
+  const notifyAdminsOfRegistration = async (name: string, email: string) => {
+    try {
+      await fetch("/api/metrics/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email }),
+      })
+    } catch (error) {
+      console.error("Failed to notify admins", error)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
@@ -117,21 +131,28 @@ export default function AuthPage() {
       router.push("/list-car")
     } else {
       const existingUser = users.find((u: any) => u.email === email)
-      if (existingUser) {
-        setError("Email already registered. Please sign in.")
-        return
-      }
-
-      const newUser = { email, password, name }
-      users.push(newUser)
-      localStorage.setItem("users", JSON.stringify(users))
-
-      localStorage.setItem("currentUser", JSON.stringify(newUser))
-      localStorage.setItem("isAuthenticated", "true")
-      localStorage.setItem("userEmail", email)
-      localStorage.setItem("userName", name)
-      router.push("/list-car")
+    if (existingUser) {
+      setError("Email already registered. Please sign in.")
+      return
     }
+
+    const newUser = { email, password, name }
+    users.push(newUser)
+    localStorage.setItem("users", JSON.stringify(users))
+
+    localStorage.setItem("currentUser", JSON.stringify(newUser))
+    localStorage.setItem("isAuthenticated", "true")
+    localStorage.setItem("userEmail", email)
+    localStorage.setItem("userName", name)
+    if (typeof window !== "undefined" && (window as any).va) {
+      ;(window as any).va("event", "user_registered", {
+        name,
+        email,
+      })
+    }
+    notifyAdminsOfRegistration(name, email)
+    router.push("/list-car")
+  }
   }
 
   return (

@@ -7,7 +7,7 @@ import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
 import { getProfileData } from "@/lib/profile"
 
-const APPROVER_EMAILS = ["tinashechikwaiti@gmail.com", "mlscalez.z@gmail.com", "jacobis4realdumb@gmail.com"]
+const APPROVER_EMAILS = ["tinashechikwaiti@gmail.com", "mlscalez.z@gmail.com"]
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)

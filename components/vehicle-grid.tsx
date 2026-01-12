@@ -18,7 +18,7 @@ const vehicles = [
     fuel: "Petrol",
     mileage: "Delivery",
     price: 270000,
-    image: "/images/screenshot-2026-01-08-172835.png",
+    image: "/images/whatsapp-image-2026-01-08-at-5-11-42-pm-1.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-5-11-42-pm-1.jpeg",
       "/images/whatsapp-image-2026-01-08-at-5-11-41-pm-2.jpeg",
@@ -63,7 +63,7 @@ const vehicles = [
     fuel: "2.0L Bi-Turbo Diesel",
     mileage: "19,286 km",
     price: 95000,
-    image: "/images/whatsapp-image-2026-01-08-at-5-12-12-pm-1.jpeg",
+    image: "/images/whatsapp-image-2026-01-08-at-5-12-08-pm-1.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-5-12-12-pm-1.jpeg",
       "/images/whatsapp-image-2026-01-08-at-5-12-14-pm-2.jpeg",
@@ -109,7 +109,7 @@ const vehicles = [
     fuel: "3.3L Turbo Diesel",
     mileage: "Delivery",
     price: 168000,
-    image: "/images/whatsapp-image-2026-01-08-at-6-13-15-pm-1.jpeg",
+    image: "/images/whatsapp-image-2026-01-08-at-6-13-06-pm.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-6-13-15-pm-1.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-13-13-pm.jpeg",
@@ -157,7 +157,7 @@ const vehicles = [
     fuel: "2.0L Petrol",
     mileage: "51,876 km",
     price: 23000,
-    image: "/images/whatsapp-image-2026-01-08-at-6-14-01-pm-1.jpeg",
+    image: "/images/whatsapp-image-2026-01-08-at-6-14-04-pm-1.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-6-14-02-pm.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-14-04-pm-1.jpeg",
@@ -202,7 +202,7 @@ const vehicles = [
     fuel: "2.0L Turbo Petrol",
     mileage: "28,660 km",
     price: 24000,
-    image: "/images/whatsapp-image-2026-01-08-at-6-15-40-pm-1.jpeg",
+    image: "/images/whatsapp-image-2026-01-08-at-6-15-39-pm.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-6-15-37-pm-1.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-15-40-pm-1.jpeg",
@@ -248,7 +248,7 @@ const vehicles = [
     fuel: "1.5L Petrol + Hybrid",
     mileage: "52,855 km",
     price: 14500,
-    image: "/images/whatsapp-image-2026-01-08-at-7-04-48-pm.jpeg",
+    image: "/images/whatsapp-image-2026-01-08-at-7-04-50-pm-3.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-7-04-49-pm.jpeg",
       "/images/whatsapp-image-2026-01-08-at-7-04-48-pm-3.jpeg",
@@ -288,7 +288,7 @@ const vehicles = [
     fuel: "2.8L Diesel",
     mileage: "Delivery",
     price: 70000,
-    image: "/images/whatsapp-image-2026-01-08-at-5-06-21-pm.jpeg",
+    image: "/images/whatsapp-image-2026-01-08-at-5-06-20-pm-4.jpeg",
     images: [
       "/images/whatsapp-image-2026-01-08-at-5-06-21-pm.jpeg",
       "/images/whatsapp-image-2026-01-08-at-5-06-26-pm.jpeg",
@@ -659,12 +659,13 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
                     onClick={() => setSelectedVehicle(vehicle)}
                     className="group bg-card rounded-[32px] border border-border overflow-hidden hover:border-primary transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 cursor-pointer"
                   >
-                    <div className="relative h-80 sm:h-[22rem] md:h-[26rem] overflow-hidden bg-muted">
+                    <div className="relative h-80 sm:h-[22rem] md:h-[26rem] overflow-hidden">
                       <Image
                         src={vehicle.image || "/placeholder.svg"}
                         alt={vehicle.name}
                         fill
-                        className="object-contain group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        style={{ objectPosition: "center" }}
                       />
                       <div className="absolute top-3 right-3 px-3 py-1 bg-primary/90 backdrop-blur-sm text-white text-xs md:text-sm font-bold rounded-full">
                         {vehicle.year}

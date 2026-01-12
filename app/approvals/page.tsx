@@ -12,11 +12,7 @@ import {
   PENDING_LISTINGS_EVENT,
 } from "@/lib/listings";
 
-const approvedApprovers = new Set([
-  "tinashechikwaiti@gmail.com",
-  "mlscalez.z@gmail.com",
-  "jacobis4realdumb@gmail.com",
-]);
+const approvedApprovers = new Set(["tinashechikwaiti@gmail.com", "mlscalez.z@gmail.com"]);
 
 export default function ApprovalsPage() {
   const [pending, setPending] = useState<Listing[]>([]);
