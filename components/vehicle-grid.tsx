@@ -13,6 +13,7 @@ const vehicles = [
     name: "Range Rover Autobiography Sport",
     brand: "land rover",
     variant: "SPORT EDITION",
+    bodyType: "suv",
     year: 2025,
     fuel: "Petrol",
     mileage: "Delivery",
@@ -57,6 +58,7 @@ const vehicles = [
     name: "Ford Ranger Raptor",
     brand: "ford",
     variant: "RAPTOR EDITION",
+    bodyType: "truck",
     year: 2023,
     fuel: "2.0L Bi-Turbo Diesel",
     mileage: "19,286 km",
@@ -102,6 +104,7 @@ const vehicles = [
     name: "Toyota LandCruiser 300",
     brand: "toyota",
     variant: "ZX EDITION",
+    bodyType: "suv",
     year: 2024,
     fuel: "3.3L Turbo Diesel",
     mileage: "Delivery",
@@ -120,6 +123,7 @@ const vehicles = [
       "/images/whatsapp-image-2026-01-08-at-6-13-14-pm-1.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-13-10-pm.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-13-10-pm-1.jpeg",
+      "/images/whatsapp-image-2026-01-08-at-6-13-10-pm-3.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-13-03-pm.jpeg",
       "/images/whatsapp-image-2026-01-08-at-6-13-06-pm.jpeg",
       "/images/toyota-1-0.jpeg",
@@ -148,6 +152,7 @@ const vehicles = [
     name: "Mercedes Benz C200",
     brand: "mercedes",
     variant: "W205 EDITION",
+    bodyType: "sedan",
     year: 2015,
     fuel: "2.0L Petrol",
     mileage: "51,876 km",
@@ -192,6 +197,7 @@ const vehicles = [
     name: "Mercedes Benz A45 AMG",
     brand: "mercedes",
     variant: "4MATIC AMG",
+    bodyType: "hatchback",
     year: 2018,
     fuel: "2.0L Turbo Petrol",
     mileage: "28,660 km",
@@ -237,6 +243,7 @@ const vehicles = [
     name: "Toyota Auris Hybrid",
     brand: "toyota",
     variant: "NEWSHAPE HYBRID",
+    bodyType: "hatchback",
     year: 2016,
     fuel: "1.5L Petrol + Hybrid",
     mileage: "52,855 km",
@@ -276,6 +283,7 @@ const vehicles = [
     name: "Toyota Hilux GD6 DoubleCab Edition",
     brand: "toyota",
     variant: "GD6 DOUBLECAB",
+    bodyType: "truck",
     year: 2025,
     fuel: "2.8L Diesel",
     mileage: "Delivery",
@@ -324,6 +332,7 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
   const [sortBy, setSortBy] = useState("popularity")
   const [minPrice, setMinPrice] = useState<number>(0)
   const [maxPrice, setMaxPrice] = useState<number>(Number.POSITIVE_INFINITY)
+  const [selectedBodyType, setSelectedBodyType] = useState<string>("all")
   const [selectedVehicle, setSelectedVehicle] = useState<(typeof vehicles)[0] | null>(null)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [userListings, setUserListings] = useState<any[]>([])
@@ -344,6 +353,7 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
       name: listing.details.split("\n")[0] || "User Listed Vehicle",
       brand: "other",
       variant: "USER LISTING",
+      bodyType: "other",
       year: new Date().getFullYear(),
       fuel: "-",
       mileage: "-",
@@ -357,6 +367,10 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
 
   const filteredVehicles = allVehicles.filter((vehicle) => {
     if (selectedBrand && vehicle.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
+      return false
+    }
+
+    if (selectedBodyType !== "all" && vehicle.bodyType !== selectedBodyType) {
       return false
     }
 
@@ -404,18 +418,35 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
                   : `${filteredVehicles.length} Certified Cars available Now`}
               </p>
             </div>
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <span className="text-xs md:text-sm text-muted-foreground">Sort by :</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="flex-1 sm:flex-none px-3 md:px-4 py-2 border border-border rounded-lg bg-card text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm md:text-base"
-              >
-                <option value="popularity">Popularity</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="year">Year</option>
-              </select>
+            <div className="flex items-center gap-3 w-full sm:w-auto flex-wrap">
+              <div className="flex items-center gap-2">
+                <span className="text-xs md:text-sm text-muted-foreground">Body:</span>
+                <select
+                  value={selectedBodyType}
+                  onChange={(e) => setSelectedBodyType(e.target.value)}
+                  className="px-3 md:px-4 py-2 border border-border rounded-lg bg-card text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm md:text-base"
+                >
+                  <option value="all">All</option>
+                  <option value="suv">SUV</option>
+                  <option value="sedan">Sedan</option>
+                  <option value="hatchback">Hatchback</option>
+                  <option value="truck">Truck</option>
+                  <option value="bus">Bus</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs md:text-sm text-muted-foreground">Sort by:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-3 md:px-4 py-2 border border-border rounded-lg bg-card text-foreground font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm md:text-base"
+                >
+                  <option value="popularity">Popularity</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="year">Year</option>
+                </select>
+              </div>
             </div>
           </div>
 

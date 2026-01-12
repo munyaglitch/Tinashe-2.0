@@ -7,7 +7,12 @@ export function FooterCTA() {
   const router = useRouter()
 
   const handleBrowseCars = () => {
-    document.getElementById("vehicles")?.scrollIntoView({ behavior: "smooth" })
+    const vehiclesSection = document.getElementById("vehicles")
+    if (vehiclesSection) {
+      vehiclesSection.scrollIntoView({ behavior: "smooth" })
+    } else {
+      router.push("/#vehicles")
+    }
   }
 
   const handleListCar = () => {

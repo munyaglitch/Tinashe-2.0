@@ -54,6 +54,13 @@ export function Hero() {
     }
   }
 
+  const handleBrowseCars = () => {
+    const vehiclesSection = document.getElementById("vehicles")
+    if (vehiclesSection) {
+      vehiclesSection.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <section id="home" className="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-12">
       <div
@@ -179,7 +186,7 @@ export function Hero() {
           >
             <Button
               size="lg"
-              onClick={() => router.push("/vehicles")}
+              onClick={handleBrowseCars}
               className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6 transition-all duration-300 hover:scale-110 hover:shadow-2xl hover:shadow-primary/50"
             >
               <span className="relative z-10">Browse Cars</span>
