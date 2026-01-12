@@ -4,7 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/header";
 import { BottomNav } from "@/components/bottom-nav";
 import { Button } from "@/components/ui/button";
-import { getPendingListings, Listing, addApprovedListing, removePendingListing } from "@/lib/listings";
+import {
+  getPendingListings,
+  Listing,
+  addApprovedListing,
+  removePendingListing,
+  PENDING_LISTINGS_EVENT,
+} from "@/lib/listings";
 
 const approvedApprovers = new Set([
   "tinashechikwaiti@gmail.com",
@@ -21,6 +27,12 @@ export default function ApprovalsPage() {
     const email = localStorage.getItem("userEmail") || "";
     setUserEmail(email);
     setPending(getPendingListings());
+  }, []);
+
+  useEffect(() => {
+    const handlePendingUpdate = () => setPending(getPendingListings());
+    window.addEventListener(PENDING_LISTINGS_EVENT, handlePendingUpdate);
+    return () => window.removeEventListener(PENDING_LISTINGS_EVENT, handlePendingUpdate);
   }, []);
 
   const handleApprove = (listing: Listing) => {

@@ -10,6 +10,7 @@ export type Listing = {
 
 const PENDING_KEY = "pendingListings"
 const APPROVED_KEY = "approvedListings"
+export const PENDING_LISTINGS_EVENT = "pending-listings-update"
 
 function readStorage(key: string): Listing[] {
   if (typeof window === "undefined") return []
@@ -26,11 +27,27 @@ function writeStorage(key: string, value: Listing[]) {
   if (key === APPROVED_KEY) {
     window.dispatchEvent(new Event("approved-listings-update"))
   }
+  if (key === PENDING_KEY) {
+    window.dispatchEvent(new Event(PENDING_LISTINGS_EVENT))
+  }
 }
 
 export function addPendingListing(listing: Listing) {
   const pending = readStorage(PENDING_KEY)
   writeStorage(PENDING_KEY, [...pending, listing])
+}
+
+export async function activateApprovalNotification(listing: Listing) {
+  if (typeof window === "undefined") return
+  try {
+    await fetch("/api/approvals/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ listing }),
+    })
+  } catch (error) {
+    console.error("[listing] Failed to notify approver", error)
+  }
 }
 
 export function getPendingListings() {

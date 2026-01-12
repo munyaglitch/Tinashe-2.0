@@ -11,7 +11,7 @@ import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Upload, X } from "lucide-react"
-import { addPendingListing } from "@/lib/listings"
+import { addPendingListing, activateApprovalNotification } from "@/lib/listings"
 
 export default function ListCarPage() {
   const router = useRouter()
@@ -78,6 +78,7 @@ export default function ListCarPage() {
     }
 
     addPendingListing(newListing)
+    activateApprovalNotification(newListing)
 
     alert(
       `Listing sent to the approval desk.\n\nAn admin will review and publish once approved.\n\nListing ID: ${newListing.id}`,
