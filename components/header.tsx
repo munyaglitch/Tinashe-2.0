@@ -101,19 +101,23 @@ export function Header() {
       }`}
     >
       <div className="container flex h-16 md:h-20 items-center justify-between px-4">
-        {/* Logo */}
+        {/* New logo with motto */}
         <div
-          className="relative h-28 w-80 md:h-32 md:w-96 transition duration-300 hover:scale-105 cursor-pointer"
+          className="flex items-center gap-3 md:gap-4 cursor-pointer transition duration-300 hover:scale-105"
           onClick={() => router.push("/")}
         >
-          <Image
-            src="/images/image-2026-01-09-160142243-removebg-preview.png"
-            alt="Tinashe Car Sales - Drive Your Dream Today"
-            fill
-            className="object-contain"
-            style={{ filter: "brightness(1.1) contrast(1.1)" }}
-            priority
-          />
+          <div className="relative h-16 w-16 md:h-20 md:w-20 flex-shrink-0">
+            <Image
+              src="/images/tc-car-sales-removebg-preview.png"
+              alt="TC Car Sales"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+          <p className="text-red-600 text-xs md:text-sm lg:text-base font-medium italic max-w-[140px] md:max-w-none leading-tight">
+            A clean car shows your best personality...
+          </p>
         </div>
 
         {/* Navigation */}
