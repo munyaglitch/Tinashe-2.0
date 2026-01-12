@@ -6,6 +6,7 @@ import { Hero } from "@/components/hero"
 import { SellYourCar } from "@/components/sell-your-car"
 import { TestimonialsSlider } from "@/components/testimonials-slider"
 import { SearchByMake } from "@/components/search-by-make"
+import { InfoLinks } from "@/components/info-links"
 import { VehicleGrid } from "@/components/vehicle-grid"
 import { FooterCTA } from "@/components/footer-cta"
 import { Footer } from "@/components/footer"
@@ -16,7 +17,6 @@ export default function Home() {
 
   const handleBrandSelect = (brand: string) => {
     setSelectedBrand(brand)
-    // Scroll to vehicles section
     document.getElementById("vehicles")?.scrollIntoView({ behavior: "smooth" })
   }
 
@@ -27,6 +27,7 @@ export default function Home() {
       <SellYourCar />
       <TestimonialsSlider />
       <SearchByMake onBrandSelect={handleBrandSelect} />
+      <InfoLinks />
       <VehicleGrid selectedBrand={selectedBrand} />
       <FooterCTA />
       <Footer />
