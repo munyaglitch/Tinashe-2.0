@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`}>
         <ConvexClientProvider>{children}</ConvexClientProvider>
-        <div className="pointer-events-none fixed bottom-4 right-4 z-50 flex items-center justify-center rounded-[10px] bg-transparent">
+        <div className="pointer-events-none fixed bottom-14 right-4 md:bottom-4 z-50 flex items-center justify-center rounded-[10px] bg-transparent">
           <Image
             src="/images/tc-car-sales-removebg-preview.png"
             alt="TC"
