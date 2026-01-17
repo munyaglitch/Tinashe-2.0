@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState, ChangeEvent } from "react"
+import { useEffect, useState, ChangeEvent, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
 import { Button } from "@/components/ui/button"
-import { User, Mail, Lock, Edit, LogOut } from "lucide-react"
+import { User, Mail, Lock, Edit, LogOut, Camera } from "lucide-react"
 import { getProfileData, saveProfileData } from "@/lib/profile"
 
 export default function ProfilePage() {
@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [profilePicture, setProfilePicture] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [bio, setBio] = useState("")
+  const profileInputRef = useRef<HTMLInputElement>(null)
   const [showResetPassword, setShowResetPassword] = useState(false)
   const [resetEmail, setResetEmail] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -115,22 +116,43 @@ export default function ProfilePage() {
 
         {/* Profile Card */}
         <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-2xl mb-6">
-            <div className="flex flex-col items-center mb-6">
-              {profilePicture ? (
-                <div className="relative mb-4 h-24 w-24 overflow-hidden rounded-full border border-white/30">
-                  <img
-                    src={profilePicture}
-                    alt="Profile"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
-                  <User className="h-12 w-12 text-white" />
-                </div>
-              )}
-              <h2 className="text-2xl font-bold">{userName}</h2>
-            </div>
+          <div className="flex flex-col items-center mb-6">
+            <button
+              type="button"
+              onClick={() => profileInputRef.current?.click()}
+              className="text-xs text-primary uppercase tracking-[0.4em] mb-2"
+            >
+              Change photo
+            </button>
+            {profilePicture ? (
+              <div className="relative mb-4 h-24 w-24 overflow-hidden rounded-full border border-white/30">
+                <img
+                  src={profilePicture}
+                  alt="Profile"
+                  className="h-full w-full object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => profileInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 translate-y-1/2 translate-x-1/2 bg-primary/90 p-2 rounded-full border border-white/40 shadow-lg"
+                >
+                  <Camera className="h-4 w-4 text-white" />
+                </button>
+              </div>
+            ) : (
+              <div className="relative mb-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <User className="h-12 w-12 text-white" />
+                <button
+                  type="button"
+                  onClick={() => profileInputRef.current?.click()}
+                  className="absolute bottom-0 right-0 translate-y-1/2 translate-x-1/2 bg-primary/90 p-2 rounded-full border border-white/40 shadow-lg"
+                >
+                  <Camera className="h-4 w-4 text-white" />
+                </button>
+              </div>
+            )}
+            <h2 className="text-2xl font-bold">{userName}</h2>
+          </div>
 
           <div className="space-y-4">
             {/* Name */}
@@ -260,6 +282,7 @@ export default function ProfilePage() {
           <label className="block text-sm font-medium">
             Profile picture
             <input
+              ref={profileInputRef}
               type="file"
               accept="image/*"
               onChange={handleProfilePictureChange}

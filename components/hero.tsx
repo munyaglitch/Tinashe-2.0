@@ -67,7 +67,7 @@ export function Hero() {
         ref={backgroundRef}
         className="absolute inset-0 bg-slate-900 transition-all duration-300 ease-out"
         style={{
-          backgroundImage: "url('/images/whatsapp-image-2026-01-08-at-5-06-23-pm.jpeg')",
+          backgroundImage: "url('/images/whatsapp-image-2026-01-08-at-5-11-42-pm-1.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "blur(4px) brightness(0.3)",
@@ -78,7 +78,7 @@ export function Hero() {
         ref={heroRef}
         className="absolute inset-0 bg-slate-900"
         style={{
-          backgroundImage: "url('/images/whatsapp-image-2026-01-08-at-5-06-23-pm.jpeg')",
+          backgroundImage: "url('/images/whatsapp-image-2026-01-08-at-5-11-42-pm-1.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "blur(4px) brightness(0.3)",
@@ -148,35 +148,20 @@ export function Hero() {
           </div>
 
           <div
-            className="flex flex-wrap items-center justify-center gap-6 md:gap-12 pt-6 animate-fade-in-up"
+            className="flex flex-wrap items-center justify-center gap-12 pt-6 animate-fade-in-up"
             style={{ animationDelay: "0.4s" }}
           >
-            <div className="flex items-center gap-3 text-white">
-              <div className="p-3 rounded-full bg-primary/20">
-                <span className="text-2xl">👥</span>
-              </div>
-              <div className="text-left">
-                <div className="text-2xl font-bold">1000+</div>
-                <div className="text-sm text-gray-300">Happy Users</div>
-              </div>
+            <div className="text-white text-center">
+              <div className="text-2xl font-bold">1000+</div>
+              <div className="text-sm text-gray-300 uppercase tracking-wider">Happy Clients</div>
             </div>
-            <div className="flex items-center gap-3 text-white">
-              <div className="p-3 rounded-full bg-primary/20">
-                <span className="text-2xl">⭐</span>
-              </div>
-              <div className="text-left">
-                <div className="text-2xl font-bold">5 Stars</div>
-                <div className="text-sm text-gray-300">Reviews</div>
-              </div>
+            <div className="text-white text-center">
+              <div className="text-2xl font-bold">4.9/5</div>
+              <div className="text-sm text-gray-300 uppercase tracking-wider">Average Rating</div>
             </div>
-            <div className="flex items-center gap-3 text-white">
-              <div className="p-3 rounded-full bg-primary/20">
-                <span className="text-2xl">🚗</span>
-              </div>
-              <div className="text-left">
-                <div className="text-2xl font-bold">100+</div>
-                <div className="text-sm text-gray-300">Cars</div>
-              </div>
+            <div className="text-white text-center">
+              <div className="text-2xl font-bold">120+</div>
+              <div className="text-sm text-gray-300 uppercase tracking-wider">Premium Cars</div>
             </div>
           </div>
 

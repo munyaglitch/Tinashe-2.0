@@ -7,8 +7,12 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">TC</span>
+              <div className="h-10 w-10 rounded-lg overflow-hidden">
+                <img
+                  src="/images/tc-car-sales-removebg-preview.png"
+                  alt="TC"
+                  className="h-full w-full object-contain"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-foreground font-bold text-lg leading-none">Tinashe Car Sales</span>
