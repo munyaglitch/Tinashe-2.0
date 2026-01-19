@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Header } from "@/components/header"
 import { Hero } from "@/components/hero"
 import { SellYourCar } from "@/components/sell-your-car"
+import { GarageCollection } from "@/components/garage-collection"
 import { TestimonialsSlider } from "@/components/testimonials-slider"
 import { SearchByMake } from "@/components/search-by-make"
 import { InfoLinks } from "@/components/info-links"
@@ -25,6 +26,7 @@ export default function Home() {
       <Header />
       <Hero />
       <SellYourCar />
+      <GarageCollection />
       <TestimonialsSlider />
       <SearchByMake onBrandSelect={handleBrandSelect} />
       <InfoLinks />
