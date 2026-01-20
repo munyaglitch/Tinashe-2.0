@@ -2,119 +2,171 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
+import { ChevronLeft, ChevronRight, Car } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function GarageCollection() {
   const [activeImage, setActiveImage] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [slideDirection, setSlideDirection] = useState<"left" | "right">("right")
 
   const images = [
     {
       src: "/images/garage-collection-1.jpeg",
       alt: "TC Garage Collection - Premium Vehicles Page 1",
+      label: "Collection A",
     },
     {
       src: "/images/garage-collection-2.jpeg",
       alt: "TC Garage Collection - Premium Vehicles Page 2",
+      label: "Collection B",
     },
   ]
 
+  const changeImage = (newIndex: number, direction: "left" | "right") => {
+    if (isTransitioning) return
+    setSlideDirection(direction)
+    setIsTransitioning(true)
+    setTimeout(() => {
+      setActiveImage(newIndex)
+      setTimeout(() => setIsTransitioning(false), 50)
+    }, 400)
+  }
+
   const nextImage = () => {
-    setActiveImage((prev) => (prev + 1) % images.length)
+    const newIndex = (activeImage + 1) % images.length
+    changeImage(newIndex, "right")
   }
 
   const prevImage = () => {
-    setActiveImage((prev) => (prev - 1 + images.length) % images.length)
+    const newIndex = (activeImage - 1 + images.length) % images.length
+    changeImage(newIndex, "left")
   }
 
   return (
-    <section className="py-16 px-4 relative overflow-hidden">
-      {/* Background decorations matching the site's color scheme */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background" />
-      <div className="absolute top-0 left-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow animation-delay-2000" />
+    <section className="py-20 px-4 relative overflow-hidden">
+      {/* Diagonal accent lines */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-1/2 -left-1/4 w-full h-full bg-gradient-to-br from-primary/5 to-transparent rotate-12 transform-gpu" />
+        <div className="absolute -bottom-1/2 -right-1/4 w-full h-full bg-gradient-to-tl from-secondary/5 to-transparent -rotate-12 transform-gpu" />
+      </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-2 bg-primary/20 text-primary px-4 py-2 rounded-full mb-4 border border-primary/30">
-            <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-medium">Featured Collection</span>
+      <div className="max-w-5xl mx-auto relative z-10">
+        {/* Section Header - Unique asymmetric design */}
+        <div className="mb-14">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-2 text-primary mb-3">
+                <div className="w-8 h-px bg-primary" />
+                <Car className="w-4 h-4" />
+                <span className="text-xs font-semibold tracking-widest uppercase">Featured Collection</span>
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold text-foreground">
+                Our Premium Selection
+              </h2>
+            </div>
+            <p className="text-muted-foreground max-w-sm text-sm md:text-right">
+              Curated quality vehicles at competitive prices
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3 text-glow-primary">
-            Our Premium Selection
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Browse our curated collection of quality vehicles. From luxury sedans to rugged off-roaders,
-            find your perfect match at competitive prices.
-          </p>
         </div>
 
         {/* Image Carousel */}
         <div className="relative">
-          {/* Main Image Container */}
-          <div className="relative rounded-2xl overflow-hidden border border-border/50 shadow-2xl glass-effect">
-            {/* Decorative corner accents */}
-            <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-primary/50 rounded-tl-2xl z-10" />
-            <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-primary/50 rounded-tr-2xl z-10" />
-            <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-primary/50 rounded-bl-2xl z-10" />
-            <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-primary/50 rounded-br-2xl z-10" />
+          {/* Main Image Container with unique shape */}
+          <div className="relative rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-card/80 to-card/40 p-1.5">
+            <div className="relative rounded-[2rem] overflow-hidden bg-background">
+              {/* Subtle top accent bar */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent z-30" />
+              
+              {/* Image with 3D flip animation */}
+              <div className="relative aspect-[9/16] md:aspect-[3/4] lg:aspect-[2/3] max-h-[750px] w-full overflow-hidden" style={{ perspective: "1000px" }}>
+                <div
+                  className={`absolute inset-0 transition-all duration-500 ease-out ${
+                    isTransitioning
+                      ? slideDirection === "right"
+                        ? "opacity-0 rotate-y-[-15deg] scale-90"
+                        : "opacity-0 rotate-y-[15deg] scale-90"
+                      : "opacity-100 rotate-y-0 scale-100"
+                  }`}
+                  style={{ 
+                    transformStyle: "preserve-3d",
+                    transform: isTransitioning 
+                      ? `perspective(1000px) rotateY(${slideDirection === "right" ? "-15deg" : "15deg"}) scale(0.9)` 
+                      : "perspective(1000px) rotateY(0deg) scale(1)"
+                  }}
+                >
+                  <Image
+                    src={images[activeImage].src || "/placeholder.svg"}
+                    alt={images[activeImage].alt}
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </div>
 
-            {/* Image */}
-            <div className="relative aspect-[9/16] md:aspect-[3/4] lg:aspect-[2/3] max-h-[800px] w-full">
-              <Image
-                src={images[activeImage].src || "/placeholder.svg"}
-                alt={images[activeImage].alt}
-                fill
-                className="object-contain bg-gradient-to-b from-primary/5 to-secondary/5 transition-all duration-500"
-                priority
-              />
+              {/* Navigation Arrows - Pill shape */}
+              <button
+                onClick={prevImage}
+                disabled={isTransitioning}
+                className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-10 h-16 md:w-12 md:h-20 rounded-full bg-foreground/10 backdrop-blur-md flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 disabled:opacity-50 group"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 group-hover:-translate-x-0.5 transition-transform" />
+              </button>
+              <button
+                onClick={nextImage}
+                disabled={isTransitioning}
+                className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-10 h-16 md:w-12 md:h-20 rounded-full bg-foreground/10 backdrop-blur-md flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300 disabled:opacity-50 group"
+                aria-label="Next image"
+              >
+                <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+
+              {/* Bottom info bar */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/90 via-background/60 to-transparent p-4 md:p-6">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-foreground/80">{images[activeImage].label}</span>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <span className="font-bold text-foreground">{activeImage + 1}</span>
+                    <span>/</span>
+                    <span>{images.length}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/80 backdrop-blur-md border border-border/50 flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-lg hover-lift"
-              aria-label="Previous image"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/80 backdrop-blur-md border border-border/50 flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all duration-300 shadow-lg hover-lift"
-              aria-label="Next image"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
           </div>
 
-          {/* Image Indicators */}
-          <div className="flex justify-center gap-3 mt-6">
+          {/* Progress bar style indicator */}
+          <div className="flex justify-center gap-2 mt-6">
             {images.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setActiveImage(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  activeImage === index
-                    ? "w-8 bg-primary shadow-lg shadow-primary/50"
-                    : "w-2 bg-muted hover:bg-muted-foreground"
-                }`}
+                onClick={() => changeImage(index, index > activeImage ? "right" : "left")}
+                className="relative h-1.5 w-16 rounded-full bg-muted-foreground/20 overflow-hidden"
                 aria-label={`Go to image ${index + 1}`}
-              />
+              >
+                <div 
+                  className={`absolute inset-y-0 left-0 bg-primary rounded-full transition-all duration-500 ${
+                    activeImage === index ? "w-full" : "w-0"
+                  }`} 
+                />
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Thumbnail Preview */}
-        <div className="flex justify-center gap-4 mt-8">
+        {/* Thumbnail Preview - Card style */}
+        <div className="flex justify-center gap-3 mt-8">
           {images.map((image, index) => (
             <button
               key={index}
-              onClick={() => setActiveImage(index)}
-              className={`relative w-24 h-32 md:w-32 md:h-44 rounded-lg overflow-hidden border-2 transition-all duration-300 hover-lift ${
+              onClick={() => changeImage(index, index > activeImage ? "right" : "left")}
+              className={`relative w-20 h-28 md:w-24 md:h-36 rounded-xl overflow-hidden transition-all duration-300 ${
                 activeImage === index
-                  ? "border-primary shadow-lg shadow-primary/30 scale-105"
-                  : "border-border/30 opacity-60 hover:opacity-100"
+                  ? "ring-2 ring-primary scale-105 shadow-lg"
+                  : "opacity-40 grayscale hover:opacity-70 hover:grayscale-0"
               }`}
             >
               <Image
@@ -124,21 +176,22 @@ export function GarageCollection() {
                 className="object-cover"
               />
               {activeImage === index && (
-                <div className="absolute inset-0 bg-primary/10 backdrop-blur-[1px]" />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-primary" />
               )}
             </button>
           ))}
         </div>
 
-        {/* CTA Button */}
-        <div className="text-center mt-10">
+        {/* CTA Button - Unique design */}
+        <div className="text-center mt-12">
           <Button
             size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg font-semibold rounded-xl shadow-lg shadow-primary/30 hover-lift animate-pulse-glow"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/20"
             asChild
           >
-            <a href="/search">
-              View All Vehicles
+            <a href="/search" className="inline-flex items-center gap-2">
+              <span>View All Vehicles</span>
+              <ChevronRight className="w-4 h-4" />
             </a>
           </Button>
         </div>
