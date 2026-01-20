@@ -7,7 +7,6 @@ import { SellYourCar } from "@/components/sell-your-car"
 import { GarageCollection } from "@/components/garage-collection"
 import { TestimonialsSlider } from "@/components/testimonials-slider"
 import { SearchByMake } from "@/components/search-by-make"
-import { ShowcaseBanner } from "@/components/showcase-banner"
 import { InfoLinks } from "@/components/info-links"
 import { VehicleGrid } from "@/components/vehicle-grid"
 import { FooterCTA } from "@/components/footer-cta"
@@ -30,7 +29,6 @@ export default function Home() {
       <GarageCollection />
       <TestimonialsSlider />
       <SearchByMake onBrandSelect={handleBrandSelect} />
-      <ShowcaseBanner />
       <InfoLinks />
       <VehicleGrid selectedBrand={selectedBrand} />
       <FooterCTA />
