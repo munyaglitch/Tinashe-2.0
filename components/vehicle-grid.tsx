@@ -717,7 +717,7 @@ const vehicles = [
     fuel: "3.0L Turbo Diesel",
     mileage: "134,135 km",
     price: 35000,
-    image: "/images/prado-j150/side-right.jpeg",
+    image: "/images/prado-j150/front-quarter-right.jpeg",
     images: [
       "/images/prado-j150/front-view.jpeg",
       "/images/prado-j150/front-quarter-left.jpeg",
