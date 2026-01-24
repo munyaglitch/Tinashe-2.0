@@ -12,7 +12,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Tinashe Car Sales Zimbabwe - Premium Cars",
   description: "Buy & Sell Premium Cars Across Zimbabwe - Your Trusted Vehicle Hub",
-  generator: "v0.app",
   icons: {
     icon: [
       {
@@ -30,6 +29,7 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
+    generator: 'v0.app'
 }
 
 export default function RootLayout({
