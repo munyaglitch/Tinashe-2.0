@@ -106,10 +106,10 @@ export function Header() {
           className="flex items-center gap-3 md:gap-4 cursor-pointer transition duration-300 hover:scale-105"
           onClick={() => router.push("/")}
         >
-          <div className="relative h-16 w-16 md:h-20 md:w-20 flex-shrink-0">
+          <div className="relative h-12 w-12 md:h-14 md:w-14 flex-shrink-0">
             <Image
-              src="/images/tc-car-sales-removebg-preview.png"
-              alt="TC Car Sales"
+              src="/images/tc-car-sales-logo.png"
+              alt="Tinashe Car Sales"
               fill
               className="object-contain"
               priority
