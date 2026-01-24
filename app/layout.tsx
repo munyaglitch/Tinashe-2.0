@@ -13,21 +13,8 @@ export const metadata: Metadata = {
   title: "Tinashe Car Sales Zimbabwe - Premium Cars",
   description: "Buy & Sell Premium Cars Across Zimbabwe - Your Trusted Vehicle Hub",
   icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
+    icon: "/images/tc-car-sales-logo.png",
+    apple: "/images/tc-car-sales-logo.png",
   },
     generator: 'v0.app'
 }
@@ -43,10 +30,10 @@ export default function RootLayout({
         <ConvexClientProvider>{children}</ConvexClientProvider>
         <div className="pointer-events-none fixed bottom-14 right-4 md:bottom-4 z-50 flex items-center justify-center rounded-[10px] bg-transparent">
           <Image
-            src="/images/tc-car-sales-removebg-preview.png"
-            alt="TC"
-            width={64}
-            height={64}
+            src="/images/tc-car-sales-logo.png"
+            alt="Tinashe Car Sales"
+            width={56}
+            height={56}
             className="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
             priority
           />
