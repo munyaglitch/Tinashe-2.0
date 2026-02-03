@@ -32,8 +32,8 @@ export default function RootLayout({
           <Image
             src="/images/tc-car-sales-logo.png"
             alt="Tinashe Car Sales"
-            width={56}
-            height={56}
+            width={80}
+            height={80}
             className="object-contain drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]"
             priority
           />
