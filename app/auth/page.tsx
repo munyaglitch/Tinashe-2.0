@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label"
 import { Header } from "@/components/header"
 import { BottomNav } from "@/components/bottom-nav"
 import { useRouter } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Loader2 } from "lucide-react"
 import { sendSignInEmail } from "@/lib/email-service"
+import { getActiveSession, getSupabaseClient } from "@/lib/supabase-client"
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -18,6 +19,8 @@ export default function AuthPage() {
   const [password, setPassword] = useState("")
   const [name, setName] = useState("")
   const [error, setError] = useState("")
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isCheckingSession, setIsCheckingSession] = useState(true)
   const [showResetForm, setShowResetForm] = useState(false)
   const [resetEmail, setResetEmail] = useState("")
   const [resetPassword, setResetPassword] = useState("")
@@ -87,6 +90,41 @@ export default function AuthPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email])
 
+  useEffect(() => {
+    const syncSupabaseSession = async () => {
+      try {
+        const session = await getActiveSession()
+        if (session?.user) {
+          const sessionEmail = session.user.email || ""
+          const sessionName =
+            session.user.user_metadata?.full_name ||
+            session.user.user_metadata?.name ||
+            session.user.email?.split("@")[0] ||
+            "Google User"
+
+          localStorage.setItem(
+            "currentUser",
+            JSON.stringify({
+              email: sessionEmail,
+              name: sessionName,
+              provider: "google",
+            }),
+          )
+          localStorage.setItem("isAuthenticated", "true")
+          localStorage.setItem("userEmail", sessionEmail)
+          localStorage.setItem("userName", sessionName)
+          router.push("/list-car")
+        }
+      } catch (err) {
+        console.error("Supabase session check failed", err)
+      } finally {
+        setIsCheckingSession(false)
+      }
+    }
+
+    syncSupabaseSession()
+  }, [router])
+
   const notifyAdminsOfRegistration = async (name: string, email: string) => {
     try {
       await fetch("/api/metrics/register", {
@@ -131,28 +169,61 @@ export default function AuthPage() {
       router.push("/list-car")
     } else {
       const existingUser = users.find((u: any) => u.email === email)
-    if (existingUser) {
-      setError("Email already registered. Please sign in.")
-      return
-    }
+      if (existingUser) {
+        setError("Email already registered. Please sign in.")
+        return
+      }
 
-    const newUser = { email, password, name }
-    users.push(newUser)
-    localStorage.setItem("users", JSON.stringify(users))
+      const newUser = { email, password, name }
+      users.push(newUser)
+      localStorage.setItem("users", JSON.stringify(users))
 
-    localStorage.setItem("currentUser", JSON.stringify(newUser))
-    localStorage.setItem("isAuthenticated", "true")
-    localStorage.setItem("userEmail", email)
-    localStorage.setItem("userName", name)
-    if (typeof window !== "undefined" && (window as any).va) {
-      ;(window as any).va("event", "user_registered", {
-        name,
-        email,
-      })
+      localStorage.setItem("currentUser", JSON.stringify(newUser))
+      localStorage.setItem("isAuthenticated", "true")
+      localStorage.setItem("userEmail", email)
+      localStorage.setItem("userName", name)
+      if (typeof window !== "undefined" && (window as any).va) {
+        ;(window as any).va("event", "user_registered", {
+          name,
+          email,
+        })
+      }
+      notifyAdminsOfRegistration(name, email)
+      router.push("/list-car")
     }
-    notifyAdminsOfRegistration(name, email)
-    router.push("/list-car")
   }
+
+  const handleGoogleSignIn = async () => {
+    setError("")
+    setIsGoogleLoading(true)
+
+    try {
+      const supabase = getSupabaseClient()
+      const { error: supabaseError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
+        },
+      })
+
+      if (supabaseError) {
+        setError("Google sign-in failed. Please try again.")
+      }
+    } catch (err) {
+      const fallbackMessage =
+        err instanceof Error && err.message.includes("Supabase")
+          ? "Supabase is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY."
+          : err instanceof Error
+            ? err.message
+            : "Unable to start Google sign-in right now."
+      setError(fallbackMessage)
+    } finally {
+      setIsGoogleLoading(false)
+    }
   }
 
   return (
@@ -224,6 +295,37 @@ export default function AuthPage() {
                 {isLogin ? "Sign In" : "Sign Up"}
               </Button>
             </form>
+
+            <div className="mt-8 space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="flex-1 border-t border-border" />
+                <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">or</span>
+                <div className="flex-1 border-t border-border" />
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                className="w-full h-12"
+                onClick={handleGoogleSignIn}
+                disabled={isGoogleLoading || isCheckingSession}
+              >
+                {isGoogleLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Redirecting to Google...
+                  </>
+                ) : (
+                  <>
+                    <GoogleIcon />
+                    Continue with Google
+                  </>
+                )}
+              </Button>
+              <p className="text-center text-xs text-muted-foreground">
+                Supabase Google authentication opens a secure Google consent screen.
+              </p>
+            </div>
 
             <div className="mt-4 text-center">
               <button
@@ -315,3 +417,32 @@ export default function AuthPage() {
     </div>
   )
 }
+
+const GoogleIcon = () => (
+  <svg
+    aria-hidden="true"
+    focusable="false"
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    className="mr-2"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M17.64 9.2045c0-.6399-.0573-1.2527-.1636-1.8391H9v3.4796h4.8441c-.2098 1.1292-.8465 2.0864-1.8037 2.729v2.2714h2.9155c1.7055-1.5696 2.6841-3.8818 2.6841-6.6419z"
+      fill="#4285F4"
+    />
+    <path
+      d="M9 18c2.43 0 4.4672-.8066 5.9568-2.1748l-2.9155-2.2714c-.8066.54-1.8365.8614-3.0413.8614-2.3409 0-4.3224-1.5801-5.0316-3.7086H.9575v2.3323C2.438 15.9834 5.4818 18 9 18z"
+      fill="#34A853"
+    />
+    <path
+      d="M3.9684 10.7066c-.18-.54-.282-1.1167-.282-1.7066s.102-1.1666.282-1.7066V4.9611H.9575C.3477 6.166 0 7.5489 0 9c0 1.4512.3477 2.8342.9575 4.0389l3.0109-2.3323z"
+      fill="#FBBC05"
+    />
+    <path
+      d="M9 3.5795c1.3213 0 2.5061.4548 3.4389 1.3477l2.5792-2.5791C13.4628.8924 11.4256 0 9 0 5.4818 0 2.438 2.0166.9575 4.9611l3.0109 2.3323C4.6776 5.1595 6.6591 3.5795 9 3.5795z"
+      fill="#EA4335"
+    />
+  </svg>
+)

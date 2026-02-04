@@ -7,6 +7,7 @@ import { BottomNav } from "@/components/bottom-nav"
 import { Button } from "@/components/ui/button"
 import { User, Mail, Lock, Edit, LogOut, Camera } from "lucide-react"
 import { getProfileData, saveProfileData } from "@/lib/profile"
+import { getSupabaseClient } from "@/lib/supabase-client"
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -72,7 +73,13 @@ export default function ProfilePage() {
     setTimeout(() => setMessage(""), 3000)
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      const supabase = getSupabaseClient()
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error("Supabase sign-out failed", err)
+    }
     localStorage.removeItem("isAuthenticated")
     localStorage.removeItem("userName")
     localStorage.removeItem("userEmail")

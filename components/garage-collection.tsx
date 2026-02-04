@@ -3,7 +3,6 @@
 import { useState } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, Car } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
 export function GarageCollection() {
   const [activeImage, setActiveImage] = useState(0)
@@ -182,19 +181,6 @@ export function GarageCollection() {
           ))}
         </div>
 
-        {/* CTA Button - Unique design */}
-        <div className="text-center mt-12">
-          <Button
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-10 py-6 text-base font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/20"
-            asChild
-          >
-            <a href="/search" className="inline-flex items-center gap-2">
-              <span>View All Vehicles</span>
-              <ChevronRight className="w-4 h-4" />
-            </a>
-          </Button>
-        </div>
       </div>
     </section>
   )

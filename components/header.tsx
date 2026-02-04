@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter, usePathname } from "next/navigation"
 import { getProfileData } from "@/lib/profile"
+import { getSupabaseClient } from "@/lib/supabase-client"
 
 const APPROVER_EMAILS = ["tinashechikwaiti@gmail.com", "mlscalez.z@gmail.com"]
 
@@ -56,7 +57,13 @@ export function Header() {
     }
   }, [])
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      const supabase = getSupabaseClient()
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error("Supabase sign-out failed", err)
+    }
     localStorage.removeItem("isAuthenticated")
     localStorage.removeItem("userName")
     localStorage.removeItem("userEmail")
