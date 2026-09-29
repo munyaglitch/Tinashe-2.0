@@ -50,7 +50,7 @@ export default function DriveToOwnPage() {
     <main className="min-h-screen bg-[#071a35] text-white">
       <Header />
       <section className="relative overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_80%_10%,rgba(218,39,51,.25),transparent_35%),linear-gradient(135deg,#071a35,#0b2a50)] px-4 pb-16 pt-20 md:pb-24 md:pt-28">
-        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1.05fr_.95fr]">
+        <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-primary">Drive-to-own financing</div>
             <h1 className="text-5xl font-semibold leading-[.98] tracking-[-.04em] md:text-7xl">Your car.<br /><span className="text-[#e33a45]">Your way.</span></h1>
@@ -58,7 +58,7 @@ export default function DriveToOwnPage() {
             <a href="#calculator" className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#e33a45] px-6 py-3.5 text-sm font-bold shadow-[0_10px_30px_rgba(227,58,69,.3)] transition hover:-translate-y-0.5 hover:bg-[#f04a55]">Calculate your payment <ArrowRight className="h-4 w-4" /></a>
             <div className="mt-12 flex flex-wrap gap-6 text-sm text-slate-300"><span className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-[#f3bd54]" /> Trusted local dealer</span><span className="flex items-center gap-2"><Clock3 className="h-5 w-5 text-[#f3bd54]" /> 1–12 month terms</span></div>
           </div>
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-white/10 p-3 shadow-2xl backdrop-blur"><img src={planVisuals[2].image} alt="Tinashe Car Sale three month drive-to-own plan" className="h-[360px] w-full rounded-[1.5rem] object-cover object-top opacity-90 md:h-[480px]" /><div className="absolute inset-x-8 bottom-8 rounded-2xl border border-white/20 bg-[#071a35]/85 p-5 backdrop-blur"><p className="text-xs font-semibold uppercase tracking-[.2em] text-[#f3bd54]">Example vehicle</p><p className="mt-1 text-xl font-semibold">2018 Toyota Aqua Hybrid</p><p className="mt-1 text-sm text-slate-300">From a $8,000 vehicle example</p></div></div>
+        
         </div>
       </section>
 
