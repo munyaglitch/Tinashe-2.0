@@ -50,7 +50,7 @@ export default function DriveToOwnPage() {
     <main className="min-h-screen bg-[#071a35] text-white">
       <Header />
       <section className="relative overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_80%_10%,rgba(218,39,51,.25),transparent_35%),linear-gradient(135deg,#071a35,#0b2a50)] px-4 pb-16 pt-20 md:pb-24 md:pt-28">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_380px]">
           <div className="max-w-2xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-primary">Drive-to-own financing</div>
             <h1 className="text-5xl font-semibold leading-[.98] tracking-[-.04em] md:text-7xl">Your car.<br /><span className="text-[#e33a45]">Your way.</span></h1>
@@ -58,7 +58,7 @@ export default function DriveToOwnPage() {
             <a href="#calculator" className="mt-9 inline-flex items-center gap-3 rounded-full bg-[#e33a45] px-6 py-3.5 text-sm font-bold shadow-[0_10px_30px_rgba(227,58,69,.3)] transition hover:-translate-y-0.5 hover:bg-[#f04a55]">Calculate your payment <ArrowRight className="h-4 w-4" /></a>
             <div className="mt-12 flex flex-wrap gap-6 text-sm text-slate-300"><span className="flex items-center gap-2"><ShieldCheck className="h-5 w-5 text-[#f3bd54]" /> Trusted local dealer</span><span className="flex items-center gap-2"><Clock3 className="h-5 w-5 text-[#f3bd54]" /> 1–12 month terms</span></div>
           </div>
-        
+          <aside className="hidden rounded-2xl border border-white/15 bg-white/[.06] p-6 shadow-xl backdrop-blur-sm lg:block" aria-label="Drive-to-own highlights"><div className="flex items-center justify-between border-b border-white/10 pb-5"><div><p className="text-xs font-semibold uppercase tracking-[.2em] text-[#f3bd54]">Built for you</p><p className="mt-2 text-2xl font-semibold">Own it your way.</p></div><CarFront className="h-8 w-8 text-[#e33a45]" /></div><div className="space-y-5 pt-5"><div className="flex gap-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e33a45]/15 text-sm font-bold text-[#f56b73]">01</div><div><p className="font-semibold">Choose a vehicle</p><p className="mt-1 text-sm leading-6 text-slate-400">Start with the car that fits your plans.</p></div></div><div className="flex gap-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e33a45]/15 text-sm font-bold text-[#f56b73]">02</div><div><p className="font-semibold">Pick your pace</p><p className="mt-1 text-sm leading-6 text-slate-400">Compare clear 1–12 month repayment options.</p></div></div><div className="flex gap-3"><div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e33a45]/15 text-sm font-bold text-[#f56b73]">03</div><div><p className="font-semibold">Drive away</p><p className="mt-1 text-sm leading-6 text-slate-400">Apply with confidence and get moving.</p></div></div></div></aside>
         </div>
       </section>
 
