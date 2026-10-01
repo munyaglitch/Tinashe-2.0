@@ -35,8 +35,8 @@ export default function DriveToOwnPage() {
   const depositRate = packageType === "a" ? 0.2 : condition === "new" ? 0.25 : 0.3
   const deposit = price * depositRate
   const balance = price - deposit
-  const rate = packageType === "a" ? 0.2 : condition === "new" ? 0.25 : 0.3
-  const totalPayable = balance + balance * rate
+  const monthlyInterestRate = 0.1
+  const totalPayable = balance + balance * monthlyInterestRate * months
   const monthlyPayment = totalPayable / months
   const savings = Math.max(0, 300 - (months - 1) * 20)
 
@@ -44,18 +44,59 @@ export default function DriveToOwnPage() {
     ["Vehicle price", money.format(price)],
     ["Deposit", `${Math.round(depositRate * 100)}% · ${money.format(deposit)}`],
     ["Repayment period", `${months} months`],
+    ["Interest", `${Math.round(monthlyInterestRate * 100)}% / month on remaining balance`],
     ["Total payable", money.format(totalPayable)],
   ], [deposit, depositRate, months, totalPayable])
 
   function downloadDetails() {
-    const text = `TINASHE CAR SALE · DRIVE-TO-OWN\n\nVehicle: 2018 Toyota Aqua Hybrid\nVehicle price: ${money.format(price)}\nPackage: ${packageType === "a" ? "Package A · 20%" : `Package B · ${condition === "new" ? "25% New" : "30% Used"}`}\nRepayment period: ${months} months\nEstimated monthly payment: ${money.format(monthlyPayment)}\nTotal payable: ${money.format(totalPayable)}\nEstimated savings: ${money.format(savings)}\n\nFigures are estimates and subject to approval.`
-    const blob = new Blob([text], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = "tinashe-drive-to-own-summary.txt"
-    link.click()
-    URL.revokeObjectURL(url)
+    const canvas = document.createElement("canvas")
+    canvas.width = 1200
+    canvas.height = 1500
+    const context = canvas.getContext("2d")
+    if (!context) return
+    context.fillStyle = "#ffffff"
+    context.fillRect(0, 0, canvas.width, canvas.height)
+    const logo = new Image()
+    const vehicle = new Image()
+    logo.crossOrigin = "anonymous"
+    vehicle.crossOrigin = "anonymous"
+    let loaded = 0
+    const render = () => {
+      loaded += 1
+      if (loaded !== 2) return
+      context.drawImage(logo, 70, 45, 220, 110)
+      context.fillStyle = "#0c3975"
+      context.font = "bold 30px Arial"
+      context.fillText("SELECTED DRIVE-TO-OWN OPTION", 700, 90)
+      context.drawImage(vehicle, 90, 180, 1020, 470)
+      context.fillStyle = "#102b55"
+      context.textAlign = "center"
+      context.font = "bold 54px Arial"
+      context.fillText("2018 Toyota Aqua Hybrid", 600, 735)
+      context.font = "bold 64px Arial"
+      context.fillStyle = "#1762a8"
+      context.fillText(money.format(price), 600, 820)
+      context.font = "28px Arial"
+      context.fillStyle = "#102b55"
+      context.fillText(`${packageType === "a" ? "Package A · 20% deposit" : `Package B · ${condition === "new" ? "25% new" : "30% used"}`} · ${months} months`, 600, 875)
+      const cards = [["REPAYMENT PERIOD", `${months} months`], ["MONTHLY PAYMENT", money.format(monthlyPayment)], ["TOTAL PAYABLE", money.format(totalPayable)]]
+      cards.forEach(([label, value], index) => { const x = 55 + index * 370; context.strokeStyle = "#9ab4ca"; context.strokeRect(x, 930, 330, 145); context.fillStyle = "#102b55"; context.font = "bold 20px Arial"; context.fillText(label, x + 165, 975); context.font = "bold 34px Arial"; context.fillText(value, x + 165, 1030) })
+      context.fillStyle = "#1762a8"
+      context.fillRect(55, 1110, 1090, 76)
+      context.fillStyle = "#ffffff"
+      context.font = "bold 30px Arial"
+      context.fillText(`10% monthly interest on remaining balance · Deposit ${money.format(deposit)}`, 600, 1158)
+      context.fillStyle = "#102b55"
+      context.font = "24px Arial"
+      context.fillText(`Contact TC Motors · +263 78 393 5399`, 600, 1280)
+      context.font = "20px Arial"
+      context.fillText("Figures are estimates and subject to approval.", 600, 1330)
+      canvas.toBlob((blob) => { if (!blob) return; const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "tc-motors-drive-to-own.png"; link.click(); URL.revokeObjectURL(url) }, "image/png")
+    }
+    logo.onload = render
+    vehicle.onload = render
+    logo.src = "/images/tc-car-sales-logo.png"
+    vehicle.src = aquaImage
   }
 
   return (
@@ -83,9 +124,9 @@ export default function DriveToOwnPage() {
           <div className="flex gap-4 rounded-2xl border border-[#f3bd54]/30 bg-[#f3bd54]/10 p-5"><div className="rounded-xl bg-[#f3bd54]/20 p-3 text-[#f3bd54]"><HandCoins className="h-6 w-6" /></div><div><p className="font-semibold">Pay fast. Save more.</p><p className="mt-1 text-sm leading-6 text-slate-400">Shorter repayment periods can save up to <span className="font-semibold text-[#f3bd54]">$300 in fees.</span></p></div></div>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:self-start"><div className="overflow-hidden rounded-[2rem] border border-white/15 bg-[#0c284b] shadow-2xl" id="calculator-card"><div className="border-b border-white/10 bg-white/[.03] p-6 md:p-8"><div className="overflow-hidden rounded-xl border border-white/10 bg-white"><img src={aquaImage} alt="Blue 2018 Toyota Aqua Hybrid" className="h-44 w-full object-cover object-center" /><div className="p-4 text-[#071a35]"><p className="text-xs font-bold uppercase tracking-[.18em] text-[#b51f32]">Selected example</p><h2 className="mt-1 text-2xl font-semibold">2018 Toyota Aqua Hybrid</h2><p className="mt-1 text-sm text-slate-600">{category === "custom" ? "Custom budget" : category} · Vehicle price · {money.format(price)}</p></div></div><div className="mt-7 flex items-end justify-between"><div><p className="text-sm text-slate-400">Repayment period</p><p className="mt-1 text-3xl font-bold text-[#f3bd54]">{months} <span className="text-lg font-medium text-slate-300">months</span></p></div><span className="rounded-full bg-white/10 px-3 py-1.5 text-xs text-slate-300">1–12 months</span></div><input aria-label="Repayment period in months" type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} className="mt-6 h-2 w-full cursor-pointer accent-[#e33a45]" /><div className="mt-2 flex justify-between text-xs text-slate-500"><span>1 month</span><span>12 months</span></div></div>
+        <div className="lg:sticky lg:top-24 lg:self-start"><div className="overflow-hidden rounded-[2rem] border border-white/15 bg-[#0c284b] shadow-2xl" id="calculator-card"><div className="border-b border-white/10 bg-white/[.03] p-6 md:p-8"><div className="overflow-hidden rounded-xl border border-white/10 bg-white"><div className="flex items-center justify-between gap-4 px-4 pt-4"><img src="/images/tc-car-sales-logo.png" alt="TC Motors" className="h-12 w-auto object-contain" /><span className="rounded-full bg-[#1762a8] px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em] text-white">Example only</span></div><img src={aquaImage} alt="Blue 2018 Toyota Aqua Hybrid example vehicle" className="h-44 w-full object-cover object-center" /><div className="p-4 text-[#071a35]"><p className="text-xs font-bold uppercase tracking-[.18em] text-[#b51f32]">Example vehicle</p><h2 className="mt-1 text-2xl font-semibold">2018 Toyota Aqua Hybrid</h2><p className="mt-1 text-sm text-slate-600">Example price · $8,000</p></div></div><div className="mt-7 flex items-end justify-between"><div><p className="text-sm text-slate-400">Repayment period</p><p className="mt-1 text-3xl font-bold text-[#f3bd54]">{months} <span className="text-lg font-medium text-slate-300">months</span></p></div><span className="rounded-full bg-white/10 px-3 py-1.5 text-xs text-slate-300">1–12 months</span></div><input aria-label="Repayment period in months" type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} className="mt-6 h-2 w-full cursor-pointer accent-[#e33a45]" /><div className="mt-2 flex justify-between text-xs text-slate-500"><span>1 month</span><span>12 months</span></div></div>
           <div className="p-6 md:p-8"><div className="flex rounded-xl bg-[#071a35] p-1"><button onClick={() => setPackageType("a")} className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${packageType === "a" ? "bg-[#e33a45] text-white shadow" : "text-slate-400 hover:text-white"}`}>Package A · 20%</button><button onClick={() => setPackageType("b")} className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${packageType === "b" ? "bg-[#e33a45] text-white shadow" : "text-slate-400 hover:text-white"}`}>Package B</button></div>{packageType === "b" && <div className="mt-4 flex gap-2"><button onClick={() => setCondition("new")} className={`flex-1 rounded-lg border px-3 py-2 text-sm ${condition === "new" ? "border-[#f3bd54] bg-[#f3bd54]/10 text-[#f3bd54]" : "border-white/10 text-slate-400"}`}>New · 25%</button><button onClick={() => setCondition("used")} className={`flex-1 rounded-lg border px-3 py-2 text-sm ${condition === "used" ? "border-[#f3bd54] bg-[#f3bd54]/10 text-[#f3bd54]" : "border-white/10 text-slate-400"}`}>Used · 30%</button></div>}
-            <div className="mt-7 rounded-2xl bg-gradient-to-br from-[#e33a45] to-[#b51f32] p-6"><p className="text-sm text-white/75">Estimated monthly payment</p><p className="mt-2 text-5xl font-semibold tracking-tight">{money.format(monthlyPayment)}<span className="text-base font-medium text-white/70"> / month</span></p></div><div className="mt-6 grid gap-4 sm:grid-cols-2">{summary.map(([label, value]) => <div key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-1 text-sm font-semibold text-slate-200">{value}</p></div>)}<div><p className="text-xs text-slate-500">Estimated savings</p><p className="mt-1 text-sm font-semibold text-[#f3bd54]">{money.format(savings)}</p></div></div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href="/auth" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-[#071a35] transition hover:bg-slate-100">Apply now <ArrowRight className="h-4 w-4" /></a><button onClick={downloadDetails} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 py-3.5 text-sm font-semibold transition hover:bg-white/10"><Download className="h-4 w-4" /> Download details</button></div><p className="mt-6 text-xs leading-5 text-slate-500">Estimated repayments are illustrative only. Final repayment amounts, fees, eligibility and approval are subject to Tinashe Car Sale&apos;s terms and confirmation.</p></div></div></div>
+            <div className="mt-7 rounded-2xl bg-gradient-to-br from-[#e33a45] to-[#b51f32] p-6"><p className="text-sm text-white/75">Estimated monthly payment</p><p className="mt-2 text-5xl font-semibold tracking-tight">{money.format(monthlyPayment)}<span className="text-base font-medium text-white/70"> / month</span></p></div><div className="mt-6 grid gap-4 sm:grid-cols-2">{summary.map(([label, value]) => <div key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-1 text-sm font-semibold text-slate-200">{value}</p></div>)}<div><p className="text-xs text-slate-500">Estimated savings</p><p className="mt-1 text-sm font-semibold text-[#f3bd54]">{money.format(savings)}</p></div></div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href="/auth" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-[#071a35] transition hover:bg-slate-100">Apply now <ArrowRight className="h-4 w-4" /></a><button onClick={downloadDetails} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 py-3.5 text-sm font-semibold transition hover:bg-white/10"><Download className="h-4 w-4" /> Download details</button></div><p className="mt-6 text-xs leading-5 text-slate-500">Package A uses a 20% deposit. Interest is calculated at 10% per month on the remaining balance. Final repayment amounts, eligibility and approval are subject to TC Motors&apos; confirmation.</p></div></div></div>
       </section>
 
       <section className="border-y border-border bg-muted/30 px-4 py-16 md:py-20"><div className="mx-auto max-w-7xl"><div className="mb-10 max-w-xl"><p className="text-sm font-bold uppercase tracking-[.25em] text-primary">A plan for every pace</p><h2 className="mt-3 text-3xl font-semibold">Pay fast. Save more.</h2><p className="mt-3 leading-7 text-muted-foreground">Select a plan to view the full payment breakdown.</p></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{planVisuals.map((item) => <button type="button" key={item.months} onClick={() => setSelectedVisual(item)} className="group overflow-hidden rounded-xl border border-border bg-card text-left shadow-sm transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><div className="flex min-h-[300px] items-center justify-center bg-background p-2"><img src={item.image} alt={`${item.months} Tinashe Car Sale payment plan`} className="h-auto max-h-[420px] w-full object-contain transition duration-300 group-hover:scale-[1.02]" /></div><div className="border-t border-border p-4"><p className="text-xs font-bold uppercase tracking-[.18em] text-primary">{item.months}</p><p className="mt-1 font-semibold text-card-foreground">{item.title}</p><p className="mt-2 text-sm text-muted-foreground">View full plan</p></div></button>)}</div></div></section>
