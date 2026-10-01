@@ -13,18 +13,30 @@ const planVisuals = [
 ]
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+const aquaImage = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download-Sv8GAOuFqwAT6ZDcimPUvXIz707uWt.jpeg"
+const categories = [
+  { name: "Indrive vehicles", price: 6500, description: "Aqua · Vitz · Swift · Fit" },
+  { name: "Fuel savers", price: 6500, description: "Efficient daily drivers" },
+  { name: "Mini SUV", price: 13000, description: "Compact and capable" },
+  { name: "SUV / 4x4", price: 16000, description: "More room, more confidence" },
+  { name: "Luxury", price: 20000, description: "Premium vehicles" },
+  { name: "Buses & kombis", price: 8000, description: "Built for more passengers" },
+  { name: "Heavy machinery", price: 15000, description: "Work-ready equipment" },
+]
 
 export default function DriveToOwnPage() {
   const [months, setMonths] = useState(6)
   const [packageType, setPackageType] = useState<"a" | "b">("a")
   const [condition, setCondition] = useState<"new" | "used">("new")
+  const [category, setCategory] = useState(categories[0].name)
+  const [budget, setBudget] = useState(String(categories[0].price))
   const [selectedVisual, setSelectedVisual] = useState<(typeof planVisuals)[number] | null>(null)
-  const price = 8000
+  const price = Math.max(4000, Number(budget) || 4000)
   const depositRate = packageType === "a" ? 0.2 : condition === "new" ? 0.25 : 0.3
   const deposit = price * depositRate
   const balance = price - deposit
-  const rate = packageType === "a" ? 0.2 : condition === "new" ? 0.25 : 0.3
-  const totalPayable = balance + balance * rate
+  const monthlyInterestRate = 0.1
+  const totalPayable = balance + balance * monthlyInterestRate * months
   const monthlyPayment = totalPayable / months
   const savings = Math.max(0, 300 - (months - 1) * 20)
 
@@ -32,24 +44,76 @@ export default function DriveToOwnPage() {
     ["Vehicle price", money.format(price)],
     ["Deposit", `${Math.round(depositRate * 100)}% · ${money.format(deposit)}`],
     ["Repayment period", `${months} months`],
+    ["Interest", `${Math.round(monthlyInterestRate * 100)}% / month on remaining balance`],
     ["Total payable", money.format(totalPayable)],
   ], [deposit, depositRate, months, totalPayable])
 
   function downloadDetails() {
-    const text = `TINASHE CAR SALE · DRIVE-TO-OWN\n\nVehicle: 2018 Toyota Aqua Hybrid\nVehicle price: ${money.format(price)}\nPackage: ${packageType === "a" ? "Package A · 20%" : `Package B · ${condition === "new" ? "25% New" : "30% Used"}`}\nRepayment period: ${months} months\nEstimated monthly payment: ${money.format(monthlyPayment)}\nTotal payable: ${money.format(totalPayable)}\nEstimated savings: ${money.format(savings)}\n\nFigures are estimates and subject to approval.`
-    const blob = new Blob([text], { type: "text/plain" })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement("a")
-    link.href = url
-    link.download = "tinashe-drive-to-own-summary.txt"
-    link.click()
-    URL.revokeObjectURL(url)
+    const canvas = document.createElement("canvas")
+    canvas.width = 1200
+    canvas.height = 1600
+    const context = canvas.getContext("2d")
+    if (!context) return
+    context.fillStyle = "#ffffff"
+    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillStyle = "#1762a8"
+    context.fillRect(0, 0, canvas.width, 18)
+    const logo = new Image()
+    const vehicle = new Image()
+    logo.crossOrigin = "anonymous"
+    vehicle.crossOrigin = "anonymous"
+    let loaded = 0
+    const render = () => {
+      loaded += 1
+      if (loaded !== 2) return
+      context.drawImage(logo, 70, 55, 260, 130)
+      context.fillStyle = "#1762a8"
+      context.font = "bold 25px Arial"
+      context.textAlign = "right"
+      context.fillText("SELECTED OPTION", 1125, 105)
+      context.textAlign = "center"
+      context.font = "bold 52px Arial"
+      context.fillStyle = "#102b55"
+      context.fillText("2018 Toyota Aqua Hybrid", 600, 760)
+      context.font = "bold 72px Arial"
+      context.fillStyle = "#1762a8"
+      context.fillText(money.format(price), 600, 845)
+      context.font = "28px Arial"
+      context.fillStyle = "#102b55"
+      context.fillText(`${packageType === "a" ? "Package A · 20% deposit" : `Package B · ${condition === "new" ? "25% new" : "30% used"}`} · ${months} months`, 600, 900)
+      const imageRatio = vehicle.width / vehicle.height
+      const imageBox = { x: 90, y: 215, width: 1020, height: 500 }
+      const drawWidth = Math.min(imageBox.width, imageBox.height * imageRatio)
+      const drawHeight = drawWidth / imageRatio
+      context.drawImage(vehicle, imageBox.x + (imageBox.width - drawWidth) / 2, imageBox.y + (imageBox.height - drawHeight) / 2, drawWidth, drawHeight)
+      const cards = [["REPAYMENT PERIOD", `${months} months`], ["MONTHLY PAYMENT", money.format(monthlyPayment)], ["TOTAL PAYABLE", money.format(totalPayable)]]
+      cards.forEach(([label, value], index) => { const x = 55 + index * 370; context.fillStyle = "#f4f8fb"; context.strokeStyle = "#9ab4ca"; context.lineWidth = 2; context.roundRect(x, 970, 330, 150, 14); context.fill(); context.stroke(); context.fillStyle = "#102b55"; context.font = "bold 20px Arial"; context.fillText(label, x + 165, 1020); context.font = "bold 34px Arial"; context.fillText(value, x + 165, 1080) })
+      context.fillStyle = "#1762a8"
+      context.roundRect(55, 1160, 1090, 82, 14)
+      context.fill()
+      context.fillStyle = "#ffffff"
+      context.font = "bold 29px Arial"
+      context.fillText(`10% monthly interest · Deposit ${money.format(deposit)}`, 600, 1212)
+      context.fillStyle = "#102b55"
+      context.font = "bold 24px Arial"
+      context.fillText("Hybrid · Fuel efficient · Automatic · Inspected", 600, 1310)
+      context.font = "24px Arial"
+      context.fillText("Contact TC Motors · +263 78 393 5399", 600, 1370)
+      context.font = "20px Arial"
+      context.fillStyle = "#5b6b7d"
+      context.fillText("Figures are estimates and subject to approval.", 600, 1435)
+      canvas.toBlob((blob) => { if (!blob) return; const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "tc-motors-drive-to-own.png"; link.click(); URL.revokeObjectURL(url) }, "image/png")
+    }
+    logo.onload = render
+    vehicle.onload = render
+    logo.src = "/icon.svg"
+    vehicle.src = aquaImage
   }
 
   return (
     <main className="min-h-screen bg-[#071a35] text-white">
       <Header />
-      <section className="relative overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_80%_10%,rgba(218,39,51,.25),transparent_35%),linear-gradient(135deg,#071a35,#0b2a50)] px-4 pb-16 pt-20 md:pb-24 md:pt-28">
+      <section className="relative overflow-hidden border-b border-white/10 bg-[#071a35] px-4 pb-16 pt-20 md:pb-24 md:pt-28">
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_380px]">
           <div className="max-w-2xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[.22em] text-primary">Drive-to-own financing</div>
@@ -62,20 +126,21 @@ export default function DriveToOwnPage() {
         </div>
       </section>
 
-      <section id="calculator" className="mx-auto grid max-w-7xl scroll-mt-24 gap-8 px-4 py-16 md:py-24 lg:grid-cols-[.9fr_1.1fr]">
-        <div className="space-y-6">
-          <div><p className="text-sm font-bold uppercase tracking-[.25em] text-[#e55b63]">Choose your route</p><h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Simple plans, clear numbers.</h2><p className="mt-4 leading-7 text-slate-400">Pick a package, set your timeline, and get a transparent estimate before you apply.</p></div>
+      <section id="calculator" className="mx-auto grid max-w-7xl scroll-mt-24 gap-10 bg-[#071a35] px-4 py-16 md:py-24 lg:grid-cols-2 lg:items-start">
+        <div className="space-y-8">
+          <div><p className="text-sm font-bold uppercase tracking-[.25em] text-[#e55b63]">Choose your route</p><h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Simple plans, clear numbers.</h2><p className="mt-4 leading-7 text-slate-400">Choose a vehicle category or enter your own budget. Your estimate updates instantly.</p></div>
+          <div className="rounded-xl border border-white/10 bg-[#0b2444] p-6"><div className="flex items-center justify-between gap-3"><div><p className="text-lg font-semibold">Choose your vehicle category</p><p className="mt-1 text-sm text-slate-400">Tap a category to auto-fill a starting price.</p></div><CarFront className="h-6 w-6 text-[#f3bd54]" /></div><div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">{categories.map((item) => <button type="button" key={item.name} onClick={() => { setCategory(item.name); setBudget(String(item.price)) }} className={`rounded-lg border p-4 text-left transition ${category === item.name ? "border-[#e33a45] bg-[#e33a45]/15 shadow-[0_8px_24px_rgba(227,58,69,.15)]" : "border-white/10 bg-[#071a35]/50 hover:border-white/25"}`}><CarFront className={`h-5 w-5 ${category === item.name ? "text-[#f56b73]" : "text-slate-400"}`} /><p className="mt-3 text-sm font-semibold capitalize">{item.name}</p><p className="mt-1 text-xs text-slate-400">From {money.format(item.price)}</p></button>)}</div><label className="mt-5 block text-sm font-semibold" htmlFor="vehicle-budget">Or enter your own budget</label><div className="mt-2 flex items-center rounded-xl border border-white/15 bg-[#071a35] px-4 focus-within:border-[#e33a45]"><span className="text-xl text-[#f56b73]">$</span><input id="vehicle-budget" inputMode="numeric" type="number" min="4000" step="100" value={budget} onChange={(event) => { setBudget(event.target.value); setCategory("custom") }} className="w-full bg-transparent px-3 py-3 text-xl font-semibold outline-none" aria-describedby="budget-help" /><span className="text-xs text-slate-500">USD</span></div><p id="budget-help" className="mt-2 text-xs text-slate-500">Any amount from $4,000 qualifies.</p></div>
           <PlanCard selected={packageType === "a"} onClick={() => setPackageType("a")} title="Package A — 20%" label="Standard" copy="Available for all eligible vehicles. A straightforward way to get moving." points={["Flexible repayment period", "Choose between 1–12 months", "Simple payment structure"]} />
           <PlanCard selected={packageType === "b"} onClick={() => setPackageType("b")} title="Package B — 30% used / 25% new" label="Flexible" copy="Designed for faster approval with options for both new and used vehicles." points={["30% option for used vehicles", "25% option for new vehicles", "Flexible repayment options"]} />
-          <div className="flex gap-4 rounded-2xl border border-[#f3bd54]/30 bg-[#f3bd54]/10 p-5"><div className="rounded-xl bg-[#f3bd54]/20 p-3 text-[#f3bd54]"><HandCoins className="h-6 w-6" /></div><div><p className="font-semibold">Pay fast. Save more.</p><p className="mt-1 text-sm leading-6 text-slate-400">Shorter repayment periods can save up to <span className="font-semibold text-[#f3bd54]">$300 in fees.</span></p></div></div>
+          <div className="flex gap-4 rounded-xl border border-[#f3bd54]/30 bg-[#f3bd54]/10 p-6"><div className="rounded-xl bg-[#f3bd54]/20 p-3 text-[#f3bd54]"><HandCoins className="h-6 w-6" /></div><div><p className="font-semibold">Pay fast. Save more.</p><p className="mt-1 text-sm leading-6 text-slate-400">Shorter repayment periods can save up to <span className="font-semibold text-[#f3bd54]">$300 in fees.</span></p></div></div>
         </div>
 
-        <div className="lg:sticky lg:top-24 lg:self-start"><div className="overflow-hidden rounded-[2rem] border border-white/15 bg-[#0c284b] shadow-2xl" id="calculator-card"><div className="border-b border-white/10 bg-white/[.03] p-6 md:p-8"><div className="flex items-start justify-between gap-4"><div><p className="text-sm text-slate-400">Your selected vehicle</p><h2 className="mt-1 text-2xl font-semibold">2018 Toyota Aqua Hybrid</h2><p className="mt-1 text-sm text-slate-400">Vehicle price · {money.format(price)}</p></div><div className="rounded-xl bg-[#e33a45]/15 p-3 text-[#f56b73]"><CarFront className="h-6 w-6" /></div></div><div className="mt-7 flex items-end justify-between"><div><p className="text-sm text-slate-400">Repayment period</p><p className="mt-1 text-3xl font-bold text-[#f3bd54]">{months} <span className="text-lg font-medium text-slate-300">months</span></p></div><span className="rounded-full bg-white/10 px-3 py-1.5 text-xs text-slate-300">1–12 months</span></div><input aria-label="Repayment period in months" type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} className="mt-6 h-2 w-full cursor-pointer accent-[#e33a45]" /><div className="mt-2 flex justify-between text-xs text-slate-500"><span>1 month</span><span>12 months</span></div></div>
+        <div className="lg:sticky lg:top-24 lg:self-start"><div className="overflow-hidden rounded-xl border border-white/15 bg-[#0c284b] shadow-xl" id="calculator-card"><div className="border-b border-white/10 bg-[#0c284b] p-6 md:p-8"><div className="overflow-hidden rounded-xl border border-white/10 bg-white"><div className="flex items-center justify-between gap-4 px-4 pt-4"><img src="/images/tc-car-sales-logo.png" alt="TC Motors" className="h-12 w-auto object-contain" /><span className="rounded-full bg-[#1762a8] px-3 py-1 text-[10px] font-bold uppercase tracking-[.12em] text-white">Example only</span></div><div className="bg-white px-4 pt-4"><img src={aquaImage} alt="Blue 2018 Toyota Aqua Hybrid example vehicle" className="mx-auto h-auto max-h-64 w-full object-contain object-center sm:max-h-80" /></div><div className="p-5 text-[#071a35]"><p className="text-xs font-bold uppercase tracking-[.18em] text-[#b51f32]">Example vehicle</p><h2 className="mt-1 text-2xl font-semibold">2018 Toyota Aqua Hybrid</h2><p className="mt-1 text-sm text-slate-600">Example price · $8,000</p><div className="mt-4 grid grid-cols-2 gap-3 border-t border-slate-200 pt-4 text-sm"><div><p className="text-xs text-slate-500">Type</p><p className="font-semibold">Hybrid hatchback</p></div><div><p className="text-xs text-slate-500">Transmission</p><p className="font-semibold">Automatic</p></div><div><p className="text-xs text-slate-500">Fuel</p><p className="font-semibold">Fuel efficient</p></div><div><p className="text-xs text-slate-500">Status</p><p className="font-semibold">Inspected</p></div></div><p className="mt-4 text-xs leading-5 text-slate-500">This Aqua is a visual example only. Choose a category or enter your own vehicle budget below.</p></div></div><div className="mt-7 flex items-end justify-between"><div><p className="text-sm text-slate-400">Repayment period</p><p className="mt-1 text-3xl font-bold text-[#f3bd54]">{months} <span className="text-lg font-medium text-slate-300">months</span></p></div><span className="rounded-full bg-white/10 px-3 py-1.5 text-xs text-slate-300">1–12 months</span></div><input aria-label="Repayment period in months" type="range" min="1" max="12" value={months} onChange={(e) => setMonths(Number(e.target.value))} className="mt-6 h-2 w-full cursor-pointer accent-[#e33a45]" /><div className="mt-2 flex justify-between text-xs text-slate-500"><span>1 month</span><span>12 months</span></div></div>
           <div className="p-6 md:p-8"><div className="flex rounded-xl bg-[#071a35] p-1"><button onClick={() => setPackageType("a")} className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${packageType === "a" ? "bg-[#e33a45] text-white shadow" : "text-slate-400 hover:text-white"}`}>Package A · 20%</button><button onClick={() => setPackageType("b")} className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition ${packageType === "b" ? "bg-[#e33a45] text-white shadow" : "text-slate-400 hover:text-white"}`}>Package B</button></div>{packageType === "b" && <div className="mt-4 flex gap-2"><button onClick={() => setCondition("new")} className={`flex-1 rounded-lg border px-3 py-2 text-sm ${condition === "new" ? "border-[#f3bd54] bg-[#f3bd54]/10 text-[#f3bd54]" : "border-white/10 text-slate-400"}`}>New · 25%</button><button onClick={() => setCondition("used")} className={`flex-1 rounded-lg border px-3 py-2 text-sm ${condition === "used" ? "border-[#f3bd54] bg-[#f3bd54]/10 text-[#f3bd54]" : "border-white/10 text-slate-400"}`}>Used · 30%</button></div>}
-            <div className="mt-7 rounded-2xl bg-gradient-to-br from-[#e33a45] to-[#b51f32] p-6"><p className="text-sm text-white/75">Estimated monthly payment</p><p className="mt-2 text-5xl font-semibold tracking-tight">{money.format(monthlyPayment)}<span className="text-base font-medium text-white/70"> / month</span></p></div><div className="mt-6 grid gap-4 sm:grid-cols-2">{summary.map(([label, value]) => <div key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-1 text-sm font-semibold text-slate-200">{value}</p></div>)}<div><p className="text-xs text-slate-500">Estimated savings</p><p className="mt-1 text-sm font-semibold text-[#f3bd54]">{money.format(savings)}</p></div></div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href="/auth" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-[#071a35] transition hover:bg-slate-100">Apply now <ArrowRight className="h-4 w-4" /></a><button onClick={downloadDetails} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 py-3.5 text-sm font-semibold transition hover:bg-white/10"><Download className="h-4 w-4" /> Download details</button></div><p className="mt-6 text-xs leading-5 text-slate-500">Estimated repayments are illustrative only. Final repayment amounts, fees, eligibility and approval are subject to Tinashe Car Sale&apos;s terms and confirmation.</p></div></div></div>
+            <div className="mt-7 rounded-2xl bg-gradient-to-br from-[#e33a45] to-[#b51f32] p-6"><p className="text-sm text-white/75">Estimated monthly payment</p><p className="mt-2 text-5xl font-semibold tracking-tight">{money.format(monthlyPayment)}<span className="text-base font-medium text-white/70"> / month</span></p></div><div className="mt-6 grid gap-4 sm:grid-cols-2">{summary.map(([label, value]) => <div key={label}><p className="text-xs text-slate-500">{label}</p><p className="mt-1 text-sm font-semibold text-slate-200">{value}</p></div>)}<div><p className="text-xs text-slate-500">Estimated savings</p><p className="mt-1 text-sm font-semibold text-[#f3bd54]">{money.format(savings)}</p></div></div><div className="mt-7 flex flex-col gap-3 sm:flex-row"><a href={`https://wa.me/263783935399?text=${encodeURIComponent(`Hello TC Motors, I would like to apply for Drive-to-Own. Vehicle budget: ${money.format(price)}. Package: ${packageType === "a" ? "Package A (20% deposit)" : `Package B (${condition === "new" ? "25% new" : "30% used"})`}. Repayment period: ${months} months. Estimated monthly payment: ${money.format(monthlyPayment)}.`)}`} target="_blank" rel="noreferrer" className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-bold text-[#071a35] transition hover:bg-slate-100">Apply on WhatsApp <ArrowRight className="h-4 w-4" /></a><button onClick={downloadDetails} className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 py-3.5 text-sm font-semibold transition hover:bg-white/10"><Download className="h-4 w-4" /> Download details</button></div><p className="mt-6 text-xs leading-5 text-slate-500">Package A uses a 20% deposit. Interest is calculated at 10% per month on the remaining balance. Final repayment amounts, eligibility and approval are subject to TC Motors&apos; confirmation.</p></div></div></div>
       </section>
 
-      <section className="border-y border-border bg-muted/30 px-4 py-16 md:py-20"><div className="mx-auto max-w-7xl"><div className="mb-10 max-w-xl"><p className="text-sm font-bold uppercase tracking-[.25em] text-primary">A plan for every pace</p><h2 className="mt-3 text-3xl font-semibold">Pay fast. Save more.</h2><p className="mt-3 leading-7 text-muted-foreground">Select a plan to view the full payment breakdown.</p></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{planVisuals.map((item) => <button type="button" key={item.months} onClick={() => setSelectedVisual(item)} className="group overflow-hidden rounded-xl border border-border bg-card text-left shadow-sm transition hover:-translate-y-1 hover:border-primary/60 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"><div className="flex min-h-[300px] items-center justify-center bg-background p-2"><img src={item.image} alt={`${item.months} Tinashe Car Sale payment plan`} className="h-auto max-h-[420px] w-full object-contain transition duration-300 group-hover:scale-[1.02]" /></div><div className="border-t border-border p-4"><p className="text-xs font-bold uppercase tracking-[.18em] text-primary">{item.months}</p><p className="mt-1 font-semibold text-card-foreground">{item.title}</p><p className="mt-2 text-sm text-muted-foreground">View full plan</p></div></button>)}</div></div></section>
+      <section className="border-y border-[#2a6d6d] bg-[#071a35] px-4 py-16 text-white md:py-20"><div className="mx-auto max-w-7xl"><div className="mb-10 max-w-xl"><p className="text-sm font-bold uppercase tracking-[.25em] text-[#f3bd54]">A plan for every pace</p><h2 className="mt-3 text-3xl font-semibold">Pay fast. Save more.</h2><p className="mt-3 leading-7 text-slate-300">Select a plan to view the full payment breakdown.</p></div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{planVisuals.map((item) => <button type="button" key={item.months} onClick={() => setSelectedVisual(item)} className="group overflow-hidden rounded-xl border border-[#2a6d6d] bg-[#0b2444] text-left shadow-sm transition hover:-translate-y-1 hover:border-[#e33a45] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e33a45]"><div className="flex min-h-[300px] items-center justify-center bg-[#0b2444] p-2"><img src={item.image} alt={`${item.months} Tinashe Car Sale payment plan`} className="h-auto max-h-[420px] w-full object-contain transition duration-300 group-hover:scale-[1.02]" /></div><div className="border-t border-[#2a6d6d] p-4"><p className="text-xs font-bold uppercase tracking-[.18em] text-primary">{item.months}</p><p className="mt-1 font-semibold text-card-foreground">{item.title}</p><p className="mt-2 text-sm text-muted-foreground">View full plan</p></div></button>)}</div></div></section>
       {selectedVisual && <div role="dialog" aria-modal="true" aria-label={`${selectedVisual.months} payment plan details`} className="fixed inset-0 z-[60] flex items-center justify-center bg-background/90 p-4 backdrop-blur-sm" onClick={() => setSelectedVisual(null)}><div className="relative flex max-h-[95vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl" onClick={(event) => event.stopPropagation()}><button type="button" aria-label="Close plan details" onClick={() => setSelectedVisual(null)} className="absolute right-3 top-3 z-10 rounded-full bg-background/90 p-2 text-foreground shadow transition hover:bg-primary hover:text-primary-foreground"><X className="h-5 w-5" /></button><div className="overflow-auto bg-background p-2 sm:p-4"><img src={selectedVisual.image} alt={`${selectedVisual.months} Tinashe Car Sale payment plan full details`} className="mx-auto h-auto w-full object-contain" /></div><div className="border-t border-border px-5 py-4"><p className="text-xs font-bold uppercase tracking-[.18em] text-primary">{selectedVisual.months}</p><p className="mt-1 font-semibold">{selectedVisual.title}</p></div></div></div>}
 
       <section className="mx-auto max-w-7xl px-4 py-16 md:py-24"><div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-[.25em] text-[#e55b63]">The process</p><h2 className="mt-3 text-3xl font-semibold">How Drive-to-Own works</h2></div><div className="mt-12 grid gap-6 md:grid-cols-3">{[["01", "Choose your car", "Find the vehicle you want from Tinashe Car Sale.", CarFront], ["02", "Choose your plan", "Select your package and repayment period.", WalletCards], ["03", "Apply & drive", "Submit your details, get reviewed, and complete the process.", Gauge]].map(([number, title, copy, Icon]) => <div key={number} className="rounded-2xl border border-white/10 bg-white/[.04] p-6"><div className="flex items-center justify-between"><Icon className="h-7 w-7 text-[#f3bd54]" /><span className="text-sm font-semibold text-[#e33a45]">{number}</span></div><h3 className="mt-8 text-xl font-semibold">{title as string}</h3><p className="mt-2 leading-7 text-slate-400">{copy as string}</p></div>)}</div></section>
