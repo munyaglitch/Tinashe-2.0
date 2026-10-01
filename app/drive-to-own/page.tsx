@@ -51,11 +51,13 @@ export default function DriveToOwnPage() {
   function downloadDetails() {
     const canvas = document.createElement("canvas")
     canvas.width = 1200
-    canvas.height = 1500
+    canvas.height = 1600
     const context = canvas.getContext("2d")
     if (!context) return
     context.fillStyle = "#ffffff"
     context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillStyle = "#1762a8"
+    context.fillRect(0, 0, canvas.width, 18)
     const logo = new Image()
     const vehicle = new Image()
     logo.crossOrigin = "anonymous"
@@ -64,38 +66,47 @@ export default function DriveToOwnPage() {
     const render = () => {
       loaded += 1
       if (loaded !== 2) return
-      context.drawImage(logo, 70, 45, 220, 110)
-      context.fillStyle = "#0c3975"
-      context.font = "bold 30px Arial"
-      context.fillText("SELECTED DRIVE-TO-OWN OPTION", 700, 90)
-      context.drawImage(vehicle, 90, 180, 1020, 470)
-      context.fillStyle = "#102b55"
-      context.textAlign = "center"
-      context.font = "bold 54px Arial"
-      context.fillText("2018 Toyota Aqua Hybrid", 600, 735)
-      context.font = "bold 64px Arial"
+      context.drawImage(logo, 70, 55, 260, 130)
       context.fillStyle = "#1762a8"
-      context.fillText(money.format(price), 600, 820)
+      context.font = "bold 25px Arial"
+      context.textAlign = "right"
+      context.fillText("SELECTED OPTION", 1125, 105)
+      context.textAlign = "center"
+      context.font = "bold 52px Arial"
+      context.fillStyle = "#102b55"
+      context.fillText("2018 Toyota Aqua Hybrid", 600, 760)
+      context.font = "bold 72px Arial"
+      context.fillStyle = "#1762a8"
+      context.fillText(money.format(price), 600, 845)
       context.font = "28px Arial"
       context.fillStyle = "#102b55"
-      context.fillText(`${packageType === "a" ? "Package A · 20% deposit" : `Package B · ${condition === "new" ? "25% new" : "30% used"}`} · ${months} months`, 600, 875)
+      context.fillText(`${packageType === "a" ? "Package A · 20% deposit" : `Package B · ${condition === "new" ? "25% new" : "30% used"}`} · ${months} months`, 600, 900)
+      const imageRatio = vehicle.width / vehicle.height
+      const imageBox = { x: 90, y: 215, width: 1020, height: 500 }
+      const drawWidth = Math.min(imageBox.width, imageBox.height * imageRatio)
+      const drawHeight = drawWidth / imageRatio
+      context.drawImage(vehicle, imageBox.x + (imageBox.width - drawWidth) / 2, imageBox.y + (imageBox.height - drawHeight) / 2, drawWidth, drawHeight)
       const cards = [["REPAYMENT PERIOD", `${months} months`], ["MONTHLY PAYMENT", money.format(monthlyPayment)], ["TOTAL PAYABLE", money.format(totalPayable)]]
-      cards.forEach(([label, value], index) => { const x = 55 + index * 370; context.strokeStyle = "#9ab4ca"; context.strokeRect(x, 930, 330, 145); context.fillStyle = "#102b55"; context.font = "bold 20px Arial"; context.fillText(label, x + 165, 975); context.font = "bold 34px Arial"; context.fillText(value, x + 165, 1030) })
+      cards.forEach(([label, value], index) => { const x = 55 + index * 370; context.fillStyle = "#f4f8fb"; context.strokeStyle = "#9ab4ca"; context.lineWidth = 2; context.roundRect(x, 970, 330, 150, 14); context.fill(); context.stroke(); context.fillStyle = "#102b55"; context.font = "bold 20px Arial"; context.fillText(label, x + 165, 1020); context.font = "bold 34px Arial"; context.fillText(value, x + 165, 1080) })
       context.fillStyle = "#1762a8"
-      context.fillRect(55, 1110, 1090, 76)
+      context.roundRect(55, 1160, 1090, 82, 14)
+      context.fill()
       context.fillStyle = "#ffffff"
-      context.font = "bold 30px Arial"
-      context.fillText(`10% monthly interest on remaining balance · Deposit ${money.format(deposit)}`, 600, 1158)
+      context.font = "bold 29px Arial"
+      context.fillText(`10% monthly interest · Deposit ${money.format(deposit)}`, 600, 1212)
       context.fillStyle = "#102b55"
+      context.font = "bold 24px Arial"
+      context.fillText("Hybrid · Fuel efficient · Automatic · Inspected", 600, 1310)
       context.font = "24px Arial"
-      context.fillText(`Contact TC Motors · +263 78 393 5399`, 600, 1280)
+      context.fillText("Contact TC Motors · +263 78 393 5399", 600, 1370)
       context.font = "20px Arial"
-      context.fillText("Figures are estimates and subject to approval.", 600, 1330)
+      context.fillStyle = "#5b6b7d"
+      context.fillText("Figures are estimates and subject to approval.", 600, 1435)
       canvas.toBlob((blob) => { if (!blob) return; const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "tc-motors-drive-to-own.png"; link.click(); URL.revokeObjectURL(url) }, "image/png")
     }
     logo.onload = render
     vehicle.onload = render
-    logo.src = "/images/tc-car-sales-logo.png"
+    logo.src = "/icon.svg"
     vehicle.src = aquaImage
   }
 
