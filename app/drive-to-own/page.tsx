@@ -6,7 +6,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
-const aquaImage = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download-Sv8GAOuFqwAT6ZDcimPUvXIz707uWt.jpeg"
+const aquaImage = "/images/aqua-example.png"
 const categories = [
   { name: "Indrive vehicles", price: 6500, description: "Aqua · Vitz · Swift · Fit" },
   { name: "Fuel savers", price: 6500, description: "Efficient daily drivers" },
