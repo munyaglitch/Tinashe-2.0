@@ -7,7 +7,7 @@ import Image from "next/image"
 import { VehicleDetailModal } from "./vehicle-detail-modal"
 import { getApprovedListings } from "@/lib/listings"
 
-const vehicles = [
+export const vehicles = [
   {
     id: 1,
     name: "Range Rover Autobiography Sport",
