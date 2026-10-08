@@ -19,7 +19,7 @@ const categories = [
 ]
 
 export default function DriveToOwnPage() {
-  const [months, setMonths] = useState(6)
+  const [months, setMonths] = useState(12)
   const [packageType, setPackageType] = useState<"a" | "b">("a")
   const [condition, setCondition] = useState<"new" | "used">("new")
   const [category, setCategory] = useState(categories[0].name)
@@ -31,7 +31,7 @@ export default function DriveToOwnPage() {
   const depositRate = packageType === "a" ? 0.2 : condition === "new" ? 0.25 : 0.3
   const deposit = price * depositRate
   const balance = price - deposit
-  const monthlyInterestRate = packageType === "a" ? 0.1 : 0
+  const monthlyInterestRate = packageType === "a" ? 0.1 : 0.05
   const totalPayable = balance + balance * monthlyInterestRate * months
   const monthlyPayment = totalPayable / months
   const savings = Math.max(0, 300 - (months - 1) * 20)
@@ -40,7 +40,7 @@ export default function DriveToOwnPage() {
     ["Vehicle price", money.format(price)],
     ["Deposit", `${Math.round(depositRate * 100)}% · ${money.format(deposit)}`],
     ["Repayment period", `${months} months`],
-    ["Interest", packageType === "a" ? "10% / month on remaining balance" : "No additional interest"],
+    ["Interest", `${packageType === "a" ? "10%" : "5%"} / month on remaining balance`],
     ["Total payable", money.format(totalPayable)],
   ], [deposit, depositRate, months, totalPayable])
 
@@ -89,7 +89,7 @@ export default function DriveToOwnPage() {
       context.fill()
       context.fillStyle = "#ffffff"
       context.font = "bold 29px Arial"
-      context.fillText(`${packageType === "a" ? "10% monthly interest on remaining balance" : "No additional interest"} · Deposit ${money.format(deposit)}`, 600, 1212)
+      context.fillText(`${packageType === "a" ? "10% monthly interest" : "5% monthly interest"} on remaining balance · Deposit ${money.format(deposit)}`, 600, 1212)
       context.fillStyle = "#102b55"
       context.font = "bold 24px Arial"
       context.fillText("Hybrid · Fuel efficient · Automatic · Inspected", 600, 1310)
@@ -126,8 +126,8 @@ export default function DriveToOwnPage() {
         <div className="space-y-8">
           <div><p className="text-sm font-bold uppercase tracking-[.25em] text-[#e55b63]">Choose your route</p><h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Simple plans, clear numbers.</h2><p className="mt-4 leading-7 text-slate-400">Choose a vehicle category or enter your own budget. Your estimate updates instantly.</p></div>
           <div className="rounded-xl border border-white/10 bg-[#0b2444] p-6"><div className="flex items-center justify-between gap-3"><div><p className="text-lg font-semibold">Choose your vehicle category</p><p className="mt-1 text-sm text-slate-400">Choose a vehicle first, then select your package and repayment period.</p></div><CarFront className="h-6 w-6 text-[#f3bd54]" /></div><label className="mt-6 block text-sm font-semibold" htmlFor="inventory-vehicle">Choose from available vehicles</label><select id="inventory-vehicle" value={selectedVehicle?.id ?? ""} onChange={(event) => { const vehicle = vehicles.find((item) => String(item.id) === event.target.value) ?? null; setSelectedVehicle(vehicle); if (vehicle) setBudget(String(vehicle.price)) }} className="mt-2 w-full rounded-lg border border-white/15 bg-[#071a35] px-4 py-3 text-sm text-white outline-none focus:border-[#e33a45]"><option value="">Choose a vehicle to begin</option>{vehicles.map((vehicle) => <option key={vehicle.id} value={vehicle.id}>{vehicle.name} · {money.format(vehicle.price)}</option>)}</select><div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">{categories.map((item) => <button type="button" key={item.name} onClick={() => { setSelectedVehicle(null); setCategory(item.name); setBudget(String(item.price)) }} className={`rounded-lg border p-4 text-left transition ${category === item.name ? "border-[#e33a45] bg-[#e33a45]/15 shadow-[0_8px_24px_rgba(227,58,69,.15)]" : "border-white/10 bg-[#071a35]/50 hover:border-white/25"}`}><CarFront className={`h-5 w-5 ${category === item.name ? "text-[#f56b73]" : "text-slate-400"}`} /><p className="mt-3 text-sm font-semibold capitalize">{item.name}</p><p className="mt-1 text-xs text-slate-400">From {money.format(item.price)}</p></button>)}</div><label className="mt-5 block text-sm font-semibold" htmlFor="vehicle-budget">Or enter your own budget</label><div className="mt-2 flex items-center rounded-xl border border-white/15 bg-[#071a35] px-4 focus-within:border-[#e33a45]"><span className="text-xl text-[#f56b73]">$</span><input id="vehicle-budget" inputMode="numeric" type="number" min="4000" step="100" value={budget} onChange={(event) => { setSelectedVehicle(null); setBudget(event.target.value); setCategory("custom") }} className="w-full bg-transparent px-3 py-3 text-xl font-semibold outline-none" aria-describedby="budget-help" /><span className="text-xs text-slate-500">USD</span></div><p id="budget-help" className="mt-2 text-xs text-slate-500">Any amount from $4,000 qualifies.</p></div>
-          <PlanCard selected={packageType === "a"} onClick={() => setPackageType("a")} title="Package A — 20%" label="Standard" copy="Available for all eligible vehicles. A straightforward way to get moving." points={["Flexible repayment period", "Choose between 1–12 months", "Simple payment structure"]} />
-          <PlanCard selected={packageType === "b"} onClick={() => setPackageType("b")} title="Package B — 30% used / 25% new" label="Flexible" copy="Designed for faster approval with options for both new and used vehicles." points={["30% option for used vehicles", "25% option for new vehicles", "Flexible repayment options"]} />
+          <PlanCard selected={packageType === "a"} onClick={() => { setPackageType("a"); setMonths(12) }} title="Package A — 20%" label="Standard" copy="Available for all eligible vehicles. A straightforward way to get moving." points={["Flexible repayment period", "12-month repayment period", "Simple payment structure"]} />
+          <PlanCard selected={packageType === "b"} onClick={() => { setPackageType("b"); setMonths(36) }} title="Package B — 30% used / 25% new" label="Flexible" copy="Designed for faster approval with options for both new and used vehicles." points={["30% option for used vehicles", "25% option for new vehicles", "36-month repayment period · 5% monthly interest"]} />
           <div className="flex gap-4 rounded-xl border border-[#f3bd54]/30 bg-[#f3bd54]/10 p-6"><div className="rounded-xl bg-[#f3bd54]/20 p-3 text-[#f3bd54]"><HandCoins className="h-6 w-6" /></div><div><p className="font-semibold">Pay fast. Save more.</p><p className="mt-1 text-sm leading-6 text-slate-400">Shorter repayment periods can save up to <span className="font-semibold text-[#f3bd54]">$300 in fees.</span></p></div></div>
         </div>
 
