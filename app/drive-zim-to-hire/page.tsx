@@ -10,7 +10,7 @@ export default function DriveZimToHirePage() {
         <div className="w-full max-w-xl rounded-3xl border border-[#b51f32]/60 bg-[#0b2444] px-8 py-14 text-center shadow-2xl md:px-16">
           <Clock3 className="mx-auto h-14 w-14 text-[#f3bd54]" aria-hidden="true" />
           <p className="mt-6 text-sm font-bold uppercase tracking-[.25em] text-[#f3bd54]">Coming soon</p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">Hire a car zim</h1>
+          <h1 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">Hire a vehicle in Zimbabwe</h1>
         </div>
       </section>
       <Footer />
