@@ -1,6 +1,6 @@
 "use client"
 
-import { Phone, Menu, X, User, LogOut, Car, PlusCircle, MessageCircle, CheckSquare, Calculator } from "lucide-react"
+import { Phone, Menu, X, User, LogOut, Car, PlusCircle, MessageCircle, CheckSquare, Calculator, KeyRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import Image from "next/image"
@@ -88,6 +88,7 @@ export function Header() {
   const navItems = [
     { icon: Car, label: "Explore Cars", path: "/" },
     { icon: Calculator, label: "Drive to Own", path: "/drive-to-own" },
+    { icon: KeyRound, label: "Drive Zim Hire", path: "/drive-zim-to-hire" },
     { icon: PlusCircle, label: "List Car", path: "/list-car", onClick: handleListCarClick },
     { icon: MessageCircle, label: "Messages", path: "/messages" },
     { icon: User, label: "Profile", path: "/profile" },
