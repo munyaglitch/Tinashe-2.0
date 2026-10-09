@@ -1,24 +1,15 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { CalendarDays, CheckCircle2, MapPin, Phone, Search, ShieldCheck, Star } from "lucide-react"
+import { useState } from "react"
+import { CalendarDays, CheckCircle2, Clock3, Phone, Search, ShieldCheck, Star } from "lucide-react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-
-const rentals = [
-  { name: "Toyota Hilux 4x4", type: "SUV · 4x4", location: "Harare", seats: 5, transmission: "Manual", fuel: "Diesel", price: 55, image: "/images/hilux-gd6/front-quarter-right.jpeg" },
-  { name: "Honda Fit", type: "Economy · Automatic", location: "Bulawayo", seats: 5, transmission: "Automatic", fuel: "Petrol", price: 35, image: "/images/vezel-rs/front-quarter-right.jpeg" },
-  { name: "VW Polo", type: "Compact · Automatic", location: "Victoria Falls", seats: 5, transmission: "Automatic", fuel: "Petrol", price: 32, image: "/images/polo-tsi/front-quarter-new.jpeg" },
-]
 
 export default function DriveZimToHirePage() {
   const [location, setLocation] = useState("Harare")
   const [pickupDate, setPickupDate] = useState("")
   const [dropoffDate, setDropoffDate] = useState("")
   const [submitted, setSubmitted] = useState(false)
-  const [filter, setFilter] = useState("All")
-
-  const visibleRentals = useMemo(() => filter === "All" ? rentals : rentals.filter((rental) => rental.location === filter), [filter])
 
   return (
     <main className="min-h-screen bg-[#f5f7fb] text-[#071a35]">
@@ -32,11 +23,7 @@ export default function DriveZimToHirePage() {
             <h1 className="max-w-3xl text-4xl font-black tracking-tight md:text-6xl">Rent a car in Zimbabwe — easy, fast, reliable.</h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-200">Practical vehicles for work, weekends, airport transfers and road trips across Harare, Bulawayo and beyond.</p>
           </div>
-          <div className="relative hidden min-h-[290px] lg:block" aria-label="Rental vehicle preview">
-            <div className="absolute right-0 top-0 h-52 w-4/5 overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-2xl"><img src={rentals[0].image} alt={rentals[0].name} className="h-full w-full object-contain" /></div>
-            <div className="absolute bottom-0 left-0 h-40 w-3/5 overflow-hidden rounded-2xl border border-white/15 bg-[#0b2444] p-2 shadow-xl"><img src={rentals[1].image} alt={rentals[1].name} className="h-full w-full object-contain" /></div>
-            <div className="absolute bottom-5 right-6 rounded-lg bg-[#b51f32] px-4 py-2 text-sm font-bold shadow-lg">Verified local rentals</div>
-          </div>
+          <div className="relative flex min-h-[290px] items-center justify-center lg:block" aria-label="Drive Zim Hire coming soon"><div className="absolute inset-8 rounded-3xl border border-white/15 bg-white/[.06]" /><div className="relative mx-auto max-w-sm rounded-2xl border border-[#b51f32]/60 bg-[#071a35]/90 p-8 text-center shadow-2xl"><Clock3 className="mx-auto h-12 w-12 text-[#f3bd54]" /><p className="mt-5 text-sm font-bold uppercase tracking-[.25em] text-[#f3bd54]">Coming soon</p><h2 className="mt-2 text-3xl font-black">Car hire is on the way</h2><p className="mt-3 text-sm leading-6 text-slate-300">We are preparing a reliable Zimbabwe-wide rental service for you.</p></div></div>
           <div className="mt-2 lg:col-span-2 rounded-2xl bg-white p-4 text-[#071a35] shadow-2xl md:p-5">
             <div className="grid gap-4 md:grid-cols-[1.1fr_1fr_1fr_auto] md:items-end">
               <label className="text-sm font-bold">Pick-up location<select value={location} onChange={(event) => setLocation(event.target.value)} className="mt-2 w-full rounded-lg border border-slate-200 bg-white px-3 py-3 font-normal outline-none focus:border-[#b51f32]"><option>Harare</option><option>Bulawayo</option><option>Victoria Falls</option><option>Mutare</option></select></label>
@@ -50,10 +37,7 @@ export default function DriveZimToHirePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl bg-[#f5f7fb] px-4 py-14 md:px-8 md:py-20">
-        <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="text-sm font-bold uppercase tracking-[.25em] text-[#b51f32]">Available now</p><h2 className="mt-2 text-3xl font-black text-[#071a35] md:text-4xl">Popular car listings</h2><p className="mt-2 text-slate-600">Straightforward daily hire from a team you can reach.</p></div><div className="flex flex-wrap gap-2">{["All", "Harare", "Bulawayo", "Victoria Falls"].map((item) => <button key={item} type="button" onClick={() => setFilter(item)} className={`rounded-full px-4 py-2 text-sm font-bold transition ${filter === item ? "bg-[#071a35] text-white" : "bg-white text-[#071a35] ring-1 ring-slate-200 hover:ring-[#b51f32]"}`}>{item}</button>)}</div></div>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">{visibleRentals.map((rental) => <article key={rental.name} className="overflow-hidden rounded-2xl bg-white shadow-[0_12px_35px_rgba(7,26,53,.10)] ring-1 ring-slate-200"><div className="flex h-52 items-center justify-center bg-slate-100 p-3"><img src={rental.image} alt={rental.name} className="h-full w-full object-contain" /></div><div className="p-5"><span className="rounded-full bg-[#e8eef8] px-3 py-1 text-xs font-bold text-[#1762a8]">{rental.type}</span><h3 className="mt-4 text-2xl font-black text-[#071a35]">{rental.name}</h3><p className="mt-3 flex items-center gap-2 text-sm text-slate-600"><MapPin className="h-4 w-4 text-[#b51f32]" />{rental.seats} seats · {rental.transmission} · {rental.fuel} · {rental.location}</p><div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-5"><p className="text-xl font-black text-[#b51f32]">USD ${rental.price} <span className="text-sm font-medium text-slate-500">/ day</span></p><a href={`https://wa.me/263783935399?text=${encodeURIComponent(`Hello TC Motors, I would like to hire the ${rental.name} in ${rental.location}.`)}`} target="_blank" rel="noreferrer" className="rounded-lg border-2 border-[#071a35] px-4 py-2 text-sm font-bold text-[#071a35] transition hover:bg-[#071a35] hover:text-white">Hire now</a></div></div></article>)}</div>
-      </section>
+      <section className="bg-white px-4 py-16 md:px-8 md:py-24"><div className="mx-auto max-w-4xl rounded-3xl border border-[#1762a8]/20 bg-[#f5f7fb] px-6 py-12 text-center shadow-sm md:px-12"><Clock3 className="mx-auto h-10 w-10 text-[#b51f32]" /><p className="mt-5 text-sm font-bold uppercase tracking-[.25em] text-[#b51f32]">Coming soon</p><h2 className="mt-3 text-3xl font-black text-[#071a35] md:text-4xl">Drive Zim Hire is almost ready.</h2><p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-600">Our rental fleet and booking process are being prepared. Soon you will be able to hire trusted vehicles across Zimbabwe with clear daily pricing and local support.</p><a href="https://wa.me/263783935399?text=Hello%20TC%20Motors%2C%20I%20would%20like%20to%20be%20notified%20when%20Drive%20Zim%20Hire%20is%20available." target="_blank" rel="noreferrer" className="mt-7 inline-flex items-center gap-2 rounded-lg bg-[#b51f32] px-6 py-3 font-bold text-white transition hover:bg-[#921b2a]"><Phone className="h-4 w-4" />Get notified on WhatsApp</a></div></section>
       <section className="bg-[#dfe8f6] px-4 py-12 md:px-8"><div className="mx-auto grid max-w-7xl gap-6 text-center md:grid-cols-3 md:text-left"><div><ShieldCheck className="mx-auto h-9 w-9 text-[#b51f32] md:mx-0" /><h3 className="mt-3 text-xl font-black">Trusted and insured</h3><p className="mt-2 text-slate-700">Clear hire terms and comprehensive cover for peace of mind.</p></div><div><CalendarDays className="mx-auto h-9 w-9 text-[#1762a8] md:mx-0" /><h3 className="mt-3 text-xl font-black">Flexible rentals</h3><p className="mt-2 text-slate-700">Daily, weekly or monthly hire with practical support.</p></div><div><Star className="mx-auto h-9 w-9 text-[#b51f32] md:mx-0" /><h3 className="mt-3 text-xl font-black">Local support</h3><p className="mt-2 text-slate-700">Zimbabwe-based assistance when you need it.</p></div></div></section>
       <Footer />
     </main>
