@@ -987,6 +987,24 @@ export const vehicles = [
   },
 ]
 
+export const hireCategories = [
+  { id: "fuel-savers", label: "Fuel Savers", rate: 50, tag: "Best for town & low fuel" },
+  { id: "small-suvs", label: "Small SUVs", rate: 80, tag: "Easy city and family travel" },
+  { id: "suvs", label: "SUVs", rate: 100, tag: "Family & comfort" },
+  { id: "pickups-trucks", label: "Pickups / Trucks", rate: 160, tag: "Heavy loads & off-road" },
+  { id: "luxury", label: "Luxury", rate: 700, tag: "Executive & VIP" },
+] as const
+
+export function getHireCategory(vehicle: (typeof vehicles)[number]) {
+  const name = vehicle.name.toLowerCase()
+  if (["range rover", "landcruiser 300", "bmw 320", "bmw 5", "bmw x", "gle", "mercedes benz c", "mercedes benz a45", "amg a class", "amg a-class"].some((term) => name.includes(term))) return hireCategories[4]
+  if (vehicle.bodyType === "truck") return hireCategories[3]
+  if (vehicle.bodyType === "suv" && ["hrv", "vezel", "rush", "ch-r", "gla"].some((term) => name.includes(term))) return hireCategories[1]
+  if (vehicle.bodyType === "suv") return hireCategories[2]
+  if (vehicle.bodyType === "hatchback" || vehicle.fuel.toLowerCase().includes("hybrid")) return hireCategories[0]
+  return hireCategories[0]
+}
+
 interface VehicleGridProps {
   selectedBrand?: string
 }
@@ -1340,7 +1358,7 @@ export function VehicleGrid({ selectedBrand }: VehicleGridProps) {
                         <h3 className="text-lg md:text-xl font-bold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                           {vehicle.name}
                         </h3>
-                        <p className="text-xs md:text-sm text-muted-foreground font-medium mt-1">{vehicle.variant}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground font-medium mt-1">{vehicle.variant}</p><span className="mt-2 inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary">{getHireCategory(vehicle).label}</span>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 md:gap-3 text-xs md:text-sm">
