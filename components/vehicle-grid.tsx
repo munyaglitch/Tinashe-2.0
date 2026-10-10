@@ -997,7 +997,7 @@ export const hireCategories = [
 
 export function getHireCategory(vehicle: (typeof vehicles)[number]) {
   const name = vehicle.name.toLowerCase()
-  if (["range rover", "landcruiser 300", "bmw 5", "bmw x", "gle", "mercedes benz c"].some((term) => name.includes(term))) return hireCategories[4]
+  if (["range rover", "landcruiser 300", "bmw 320", "bmw 5", "bmw x", "gle", "mercedes benz c", "mercedes benz a45", "amg a class", "amg a-class"].some((term) => name.includes(term))) return hireCategories[4]
   if (vehicle.bodyType === "truck") return hireCategories[3]
   if (vehicle.bodyType === "suv" && ["hrv", "vezel", "rush", "ch-r", "gla"].some((term) => name.includes(term))) return hireCategories[1]
   if (vehicle.bodyType === "suv") return hireCategories[2]
