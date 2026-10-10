@@ -88,7 +88,7 @@ export function Header() {
   const navItems = [
     { icon: Car, label: "Explore Cars", path: "/" },
     { icon: Calculator, label: "Drive to Own", path: "/drive-to-own" },
-    { icon: KeyRound, label: "Drive Zim Hire", path: "/drive-zim-to-hire" },
+    { icon: KeyRound, label: "TC Hire", path: "/drive-zim-to-hire" },
     { icon: PlusCircle, label: "List Car", path: "/list-car", onClick: handleListCarClick },
     { icon: MessageCircle, label: "Messages", path: "/messages" },
     { icon: User, label: "Profile", path: "/profile" },
