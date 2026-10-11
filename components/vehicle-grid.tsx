@@ -993,6 +993,7 @@ export const hireCategories = [
   { id: "suvs", label: "SUVs", rate: 100, tag: "Family & comfort" },
   { id: "pickups-trucks", label: "Pickups / Trucks", rate: 160, tag: "Heavy loads & off-road" },
   { id: "luxury", label: "Luxury", rate: 700, tag: "Executive & VIP" },
+  { id: "i-tow", label: "I Tow", rate: 0, tag: "Coming soon", comingSoon: true },
 ] as const
 
 export function getHireCategory(vehicle: (typeof vehicles)[number]) {
