@@ -8,7 +8,7 @@ export default function ITowPage() {
           <Clock3 className="h-10 w-10" aria-hidden="true" />
         </div>
         <p className="mt-8 text-sm font-bold uppercase tracking-[.25em] text-[#b51f32]">Coming soon</p>
-        <h1 className="mt-3 text-4xl font-black tracking-tight md:text-6xl">I TOW COMING SOON</h1>
+        <h1 className="mt-3 text-4xl font-black tracking-tight text-[#071a35] md:text-6xl">I TOW COMING SOON</h1>
       </section>
     </main>
   )
