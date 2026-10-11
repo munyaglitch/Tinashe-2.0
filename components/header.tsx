@@ -89,7 +89,7 @@ export function Header() {
     { icon: Car, label: "Explore Cars", path: "/" },
     { icon: Calculator, label: "Drive to Own", path: "/drive-to-own" },
     { icon: KeyRound, label: "TC Hire", path: "/drive-zim-to-hire" },
-    { icon: KeyRound, label: "I Tow · Coming soon", path: "/drive-zim-to-hire#i-tow" },
+    { icon: KeyRound, label: "I Tow · Coming soon", path: "/i-tow" },
     { icon: PlusCircle, label: "List Car", path: "/list-car", onClick: handleListCarClick },
     { icon: MessageCircle, label: "Messages", path: "/messages" },
     { icon: User, label: "Profile", path: "/profile" },
